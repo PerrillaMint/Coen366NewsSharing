@@ -1,5 +1,6 @@
 # protocol/constants.py
 
+#TCP Operations
 REGISTER = "REGISTER"
 REGISTERED = "REGISTERED"
 REGISTER_DENIED = "REGISTER-DENIED"
@@ -15,3 +16,21 @@ SUBJECTS_REJECTED = "SUBJECTS-REJECTED"
 
 DE_REGISTER = "DE-REGISTER"
 
+#UDP Operations
+PUBLISH = "PUBLISH"
+PUBLISH_DENIED = "PUBLISH-DENIED"
+MESSAGE = "MESSAGE"
+FORWARD = "FORWARD"
+PUBLISH_COMMENT = "PUBLISH-COMMENT"
+COMMENT = "COMMENT"
+
+#Valid Subjects
+VALID_SUBJECTS = [
+    "Sports",
+    "Technology",
+    "Politics",
+    "Entertainment",
+    "Science",
+    "Business",
+    "Health",
+]
