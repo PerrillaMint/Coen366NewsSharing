@@ -15,10 +15,10 @@ def load_config(server_id=None):
             "host": "0.0.0.0",
             "tcp_port": 10000,
             "udp_port": 20000,
+            # DEV ASSUMPTION:
+            # Server A serves localhost clients
             "region_prefixes": ["127."],
             # Peer server info (Server B)
-             # DEV ASSUMPTION:
-            # Server A serves localhost clients
             "peer_ip": "127.0.0.1",
             "peer_udp_port": 20001,
             "peer_ip_for_clients": "127.0.0.1",
