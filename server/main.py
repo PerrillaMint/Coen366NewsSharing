@@ -22,6 +22,12 @@ class Ctx:
         self.db = Database(cfg["db_path"])
         self.log = make_logger(f"Server-{self.server_name}")
 
+        # Set by run_udp_server so TCP handlers can send UDP packets
+        self.udp_transport = None
+
+        # Maps rq_id -> asyncio.Future for cross-server NAME-CHECK replies
+        self.pending_name_checks = {}
+
     def is_ip_in_region(self, ip):
         return any(ip.startswith(p) for p in self.region_prefixes)
 
@@ -38,6 +44,7 @@ async def main():
 
     # Start UDP server (returns transport, runs in background)
     udp_transport = await run_udp_server(ctx)
+    ctx.udp_transport = udp_transport
 
     # Start TCP server (blocks / serves forever)
     try:
