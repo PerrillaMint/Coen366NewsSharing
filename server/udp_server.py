@@ -35,6 +35,12 @@ class UDPServerProtocol(asyncio.DatagramProtocol):
             elif op == C.FORWARD:
                 self._handle_forward(fields)
 
+            elif op == C.NAME_CHECK:
+                self._handle_name_check(fields, addr)
+
+            elif op == C.NAME_CHECK_REPLY:
+                self._handle_name_check_reply(fields)
+
             else:
                 self.ctx.log.warning(f"UDP unknown op: {op}")
 
@@ -108,8 +114,7 @@ class UDPServerProtocol(asyncio.DatagramProtocol):
 
         self.ctx.log.info(f"COMMENT from '{name}' on '{subject}': {title}")
 
-
-    #  FORWARD 
+    #  FORWARD
     def _handle_forward(self, fields):
 
         if len(fields) < 4:
@@ -125,6 +130,38 @@ class UDPServerProtocol(asyncio.DatagramProtocol):
 
         self.ctx.log.info(f"FORWARD relayed for '{name}' on '{subject}': {title}")
 
+    #  NAME-CHECK — peer asks "does this name exist locally?"
+    def _handle_name_check(self, fields, addr):
+
+        if len(fields) < 2:
+            return
+
+        rq = fields[0]
+        name = fields[1]
+
+        exists = self.ctx.db.user_exists(name)
+        reply = encode(C.NAME_CHECK_REPLY, rq, name, "1" if exists else "0")
+        self._send_to(addr, reply)
+        self.ctx.log.info(f"NAME-CHECK for '{name}': exists={exists}")
+
+    #  NAME-CHECK-REPLY 
+    def _handle_name_check_reply(self, fields):
+
+        if len(fields) < 3:
+            return
+
+        rq = fields[0]
+        name = fields[1]
+        exists = fields[2] == "1"
+
+        future = self.ctx.pending_name_checks.get(rq)
+        if future and not future.done():
+            future.set_result(exists)
+            self.ctx.log.info(
+                f"NAME-CHECK-REPLY for '{name}' (rq {rq}): exists={exists}")
+        else:
+            self.ctx.log.warning(
+                f"NAME-CHECK-REPLY for unknown/expired rq {rq}")
 
     #  Helpers
     def _send_to_interested(self, name, subject, title, text):
