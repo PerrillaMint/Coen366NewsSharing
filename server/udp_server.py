@@ -5,12 +5,19 @@ import socket
 from protocol.codec import decode_line, encode, ProtocolError
 from protocol import constants as C
 
+# Retry config for fire-and-forget peer messages (FORWARD, PUBLISH-COMMENT)
+PEER_RETRY_COUNT = 2        # total retries after the first send
+PEER_RETRY_DELAY = 0.5      # seconds between retries
+PEER_ACK_TIMEOUT = 1.5      # seconds to wait for FORWARD-ACK
+
 
 class UDPServerProtocol(asyncio.DatagramProtocol):
 
     def __init__(self, ctx):
         self.ctx = ctx
         self.transport = None
+        # Maps msg_id -> asyncio.Event for FORWARD-ACK tracking
+        self.pending_forward_acks = {}
 
     def connection_made(self, transport):
         self.transport = transport
@@ -33,13 +40,16 @@ class UDPServerProtocol(asyncio.DatagramProtocol):
                 self._handle_comment(fields, addr, from_peer)
 
             elif op == C.FORWARD:
-                self._handle_forward(fields)
+                self._handle_forward(fields, addr)
 
             elif op == C.NAME_CHECK:
                 self._handle_name_check(fields, addr)
 
             elif op == C.NAME_CHECK_REPLY:
                 self._handle_name_check_reply(fields)
+
+            elif op == C.FORWARD_ACK:
+                self._handle_forward_ack(fields)
 
             else:
                 self.ctx.log.warning(f"UDP unknown op: {op}")
@@ -81,9 +91,12 @@ class UDPServerProtocol(asyncio.DatagramProtocol):
         # Send MESSAGE to all local interested users
         self._send_to_interested(name, subject, title, text)
 
-        # FORWARD to peer server
-        fwd_msg = encode(C.FORWARD, name, subject, title, text)
-        self._send_to_peer(fwd_msg)
+        # FORWARD to peer server (with retry)
+        fwd_msg = encode(C.FORWARD, rq, name, subject, title, text)
+        asyncio.ensure_future(self._send_to_peer_with_retry(rq, fwd_msg))
+
+        # #8 — Acknowledge successful publish back to the client
+        self._send_to(addr, encode(C.PUBLISH_CONFIRMED, rq, subject, title))
 
         self.ctx.log.info(f"PUBLISH from '{name}' on '{subject}': {title}")
 
@@ -110,20 +123,36 @@ class UDPServerProtocol(asyncio.DatagramProtocol):
         # Only forward to peer if this came from a local client (not from peer)
         if not from_peer:
             fwd_msg = encode(C.PUBLISH_COMMENT, name, subject, title, text)
-            self._send_to_peer(fwd_msg)
+            asyncio.ensure_future(self._send_to_peer_with_retry(name, fwd_msg))
 
         self.ctx.log.info(f"COMMENT from '{name}' on '{subject}': {title}")
 
-    #  FORWARD
-    def _handle_forward(self, fields):
+    #  FORWARD — received from peer server
+    def _handle_forward(self, fields, addr):
 
-        if len(fields) < 4:
+        if len(fields) < 5:
+            self.ctx.log.warning("FORWARD: bad field count, dropping")
             return
 
-        name = fields[0]
-        subject = fields[1]
-        title = fields[2]
-        text = fields[3]
+        rq = fields[0]
+        name = fields[1]
+        subject = fields[2]
+        title = fields[3]
+        text = fields[4]
+
+        # #9 — Validate subject is in the allowed list
+        if subject not in C.VALID_SUBJECTS:
+            self.ctx.log.warning(
+                f"FORWARD dropped: invalid subject '{subject}'")
+            return
+
+        # #9 — Validate title and text are non-empty
+        if not title.strip() or not text.strip():
+            self.ctx.log.warning("FORWARD dropped: empty title or text")
+            return
+
+        # Send ACK back to the peer so it can stop retrying (#10)
+        self._send_to(addr, encode(C.FORWARD_ACK, rq))
 
         # Send MESSAGE to all local interested users
         self._send_to_interested(name, subject, title, text)
@@ -144,7 +173,7 @@ class UDPServerProtocol(asyncio.DatagramProtocol):
         self._send_to(addr, reply)
         self.ctx.log.info(f"NAME-CHECK for '{name}': exists={exists}")
 
-    #  NAME-CHECK-REPLY 
+    #  NAME-CHECK-REPLY — response from peer about name existence
     def _handle_name_check_reply(self, fields):
 
         if len(fields) < 3:
@@ -162,6 +191,51 @@ class UDPServerProtocol(asyncio.DatagramProtocol):
         else:
             self.ctx.log.warning(
                 f"NAME-CHECK-REPLY for unknown/expired rq {rq}")
+
+    #  FORWARD-ACK — peer acknowledges it received our FORWARD
+    def _handle_forward_ack(self, fields):
+
+        if len(fields) < 1:
+            return
+
+        rq = fields[0]
+        evt = self.pending_forward_acks.get(rq)
+        if evt and not evt.is_set():
+            evt.set()
+            self.ctx.log.info(f"FORWARD-ACK received for rq {rq}")
+        else:
+            self.ctx.log.warning(f"FORWARD-ACK for unknown/expired rq {rq}")
+
+    #  Retry helper — send to peer and retry until ACK or limit reached (#10)
+    async def _send_to_peer_with_retry(self, rq, msg):
+        """Send msg to peer. Retry up to PEER_RETRY_COUNT times if no
+        FORWARD-ACK is received within PEER_ACK_TIMEOUT."""
+
+        evt = asyncio.Event()
+        self.pending_forward_acks[rq] = evt
+
+        peer_addr = (self.ctx.peer_ip, self.ctx.peer_udp_port)
+
+        for attempt in range(1 + PEER_RETRY_COUNT):
+            self.ctx.log.info(
+                f"UDP TX to peer {peer_addr} (attempt {attempt + 1}): "
+                f"{msg.strip()}")
+            self.transport.sendto(msg.encode(), peer_addr)
+
+            try:
+                await asyncio.wait_for(evt.wait(), timeout=PEER_ACK_TIMEOUT)
+                # ACK received
+                self.pending_forward_acks.pop(rq, None)
+                return
+            except asyncio.TimeoutError:
+                if attempt < PEER_RETRY_COUNT:
+                    self.ctx.log.warning(
+                        f"No ACK for rq {rq}, retrying "
+                        f"({attempt + 1}/{PEER_RETRY_COUNT})...")
+
+        self.ctx.log.error(
+            f"Peer did not ACK rq {rq} after {1 + PEER_RETRY_COUNT} attempts")
+        self.pending_forward_acks.pop(rq, None)
 
     #  Helpers
     def _send_to_interested(self, name, subject, title, text):
