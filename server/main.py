@@ -6,6 +6,7 @@ from server.persistence import Database
 from server.log import make_logger
 from server.tcp_server import run_tcp_server
 from server.udp_server import run_udp_server
+from client.client import TcpClient
 
 
 class Ctx:
@@ -23,7 +24,7 @@ class Ctx:
         self.log = make_logger(f"Server-{self.server_name}")
 
         # Set by run_udp_server so TCP handlers can send UDP packets
-        self.udp_transport = None
+        self.udp_transport : asyncio.DatagramTransport | None = None
 
         # Maps rq_id -> asyncio.Future for cross-server NAME-CHECK replies
         self.pending_name_checks = {}
