@@ -13,6 +13,7 @@
 import asyncio
 import client.client
 from server.main import Ctx
+from client.client import UdpClient
 
 cfg = {
     "server_name": "ClientTest",
@@ -35,8 +36,27 @@ async def test_client():
     print(f"Client IP: {await client.get_my_ip()}")
     
 
-    #register
+    #TCP tests
+    print("Starting TCP tests...")
     await client.register()
+    await client.deregister()
+    await client.register()  # Attempt to register again to test duplicate handling
+    await client.update()
+    await client.subjects("Subject3", "Subject4")
+    await client.deregister()
+
+    #UDP tests
+    print("Starting UDP tests...")
+    udp_client = UdpClient(ctx, "TestClient1", client.rq_counter, False, ["Subject1", "Subject2"])
+    udp_client.server_ip = "127.0.0.1"
+    udp_client.server_port = 20000  # UDP server port
+    
+    await udp_client.publish("Subject1", "Test Title", "This is test content")
+    await udp_client.publish_comment("Subject1", "Test Title", "This is a test comment")
+    
+
+
+
 
 asyncio.run(test_client())
 
