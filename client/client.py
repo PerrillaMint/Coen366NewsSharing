@@ -5,7 +5,7 @@ from protocol import constants as C
 
 class BaseClient(ABC):
 
-    def __init__(self, ctx, name, rq_counter, is_registered, subjects):
+    def __init__(self, ctx, name, rq_counter, is_registered, subjects_list):
         self.ctx = ctx
         self.client_ip = '0.0.0.0'
         self.server_ip = '0.0.0.0'
@@ -21,7 +21,7 @@ class BaseClient(ABC):
         self.name = name
         self.rq_counter = rq_counter
         self.is_registered = is_registered
-        self.subjects = subjects
+        self.subjects_list = subjects_list
 
     @abstractmethod
     async def send_message(self, message: str):
@@ -244,9 +244,9 @@ class UdpClient(BaseClient):
     #LISTENER
     async def datagram_received(self, data, addr):
         try:
-            #TODO add proper logs
+            
             text = data.decode()
-            print(f"UDP RX from {addr}: {text.strip()}")
+            self.ctx.log.info(f"[UDP Client] RX from {addr}: {text.strip()}")
 
             op, fields = decode_line(text)
 
