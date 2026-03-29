@@ -31,7 +31,7 @@ ctx = Ctx(cfg)
 async def test_client():
     print("Starting test client...")
     from client.client import TcpClient
-    client = TcpClient(ctx, "TestClient1", 0, False, ["Subject1", "Subject2"])
+    client = TcpClient(ctx, "TestClient1", 1, False, ["Subject1", "Subject2"])
     await client.start_client("127.0.0.1", 10000)
     print(f"Client IP: {await client.get_my_ip()}")
     

@@ -66,6 +66,7 @@ async def handle_register(ctx, writer, fields):
 
     rq, name, ip, tcp_s, udp_s = fields
 
+    #TODO: Conditions to balance user distribution across servers (when to refer to peer)
     # Region check
     if not ctx.is_ip_in_region(ip):
         _send(ctx, writer, encode(C.REFER, rq, ctx.peer_ip_for_clients))

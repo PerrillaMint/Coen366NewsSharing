@@ -4,7 +4,7 @@ from protocol.codec import decode_line, encode, ProtocolError
 from protocol import constants as C
 
 class BaseClient(ABC):
-
+    
     def __init__(self, ctx, name, rq_counter, is_registered, subjects_list):
         self.ctx = ctx
         self.client_ip = '0.0.0.0'
@@ -109,6 +109,7 @@ class TcpClient(BaseClient):
             self.writer.write(message.encode())
             await self.writer.drain()
             self.ctx.log.info(f"[TCP Client] Sent: {message.strip()}")
+            await self.get_next_rq()
         except Exception as e:
             self.ctx.log.error(f"[TCP Client] Send error: {e}")
             await self.close()
@@ -145,12 +146,12 @@ class TcpClient(BaseClient):
 
     #UPDATE
     async def update(self):
-        msg = encode(C.REGISTER, self.rq_counter, self.name, self.client_ip, self.tcp_port, self.udp_port)
+        msg = encode(C.UPDATE, self.rq_counter, self.name, self.client_ip, self.tcp_port, self.udp_port)
         await self.send_message(msg)
 
     #SUBJECTS
     async def subjects(self, *fields):
-        msg = encode(C.REGISTER, self.rq_counter, self.name, *fields)
+        msg = encode(C.SUBJECTS, self.rq_counter, self.name, *fields)
         await self.send_message(msg)
 
     async def handle_server_message(self, data):
@@ -179,13 +180,23 @@ class TcpClient(BaseClient):
 
     async def handle_register_denied(self, fields):
         self.ctx.log.error(f"[TCP Client] User Registration Denied (RQ# {fields[0]}) | Reason: {fields[1]}")
-        #TODO
         #retry or give up
+        if self.rq_counter < 3:  # Arbitrary retry limit
+            self.ctx.log.info(f"[TCP Client] Retrying registration (Attempt {self.rq_counter + 1})...")
+            await self.register()
+        else:            self.ctx.log.error(f"[TCP Client] Registration failed after {self.rq_counter} attempts. Giving up.")
+
         #when gives up, tcp connection closed
         await self.close()
 
     async def handle_refer(self, fields):
         self.ctx.log.info(f"[TCP Client] User Referred (RQ# {fields[0]}) | New IP Address: {fields[1]}")
+        #close current connection and connect to new IP
+        await self.close()
+        self.server_port = self.server_port + 1
+        await self.start_client(fields[1], self.server_port)
+        await self.register()
+         
 
     async def handle_update_confirmed(self, fields):
         self.ctx.log.info(f"[TCP Client] Update Confirmed (RQ# {fields[0]})")
