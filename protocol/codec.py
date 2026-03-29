@@ -3,7 +3,12 @@
 class ProtocolError(Exception):
     pass
 
-def decode_line(line: str):
+def decode_line(line):
+    
+    if isinstance(line, bytes):
+        # Convert bytes to string
+        line = line.decode('utf-8')
+
     line = line.strip()
 
     if not line.startswith("|") or not line.endswith("|"):
