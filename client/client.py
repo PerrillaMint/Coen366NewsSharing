@@ -15,7 +15,7 @@ def debug(msg: str):
 
 class BaseClient(ABC):
 
-    def __init__(self, name, rq_counter=0, is_registered=False, subjects_list=None):
+    def __init__(self, name, rq_counter=0, is_registered=False, subjects=None):
         self.client_ip = "127.0.0.1"
         self.server_ip = "0.0.0.0"
 
@@ -29,7 +29,7 @@ class BaseClient(ABC):
         self.name = name
         self.rq_counter = rq_counter
         self.is_registered = is_registered
-        self.subjects_list = subjects_list or []
+        self.subjects = subjects or []
 
     async def init_network_info(self):
         self.client_ip = await self.get_my_ip()
@@ -67,8 +67,8 @@ class BaseClient(ABC):
 
 class TcpClient(BaseClient):
 
-    def __init__(self, name, rq_counter=0, is_registered=False, subjects_list=None):
-        super().__init__(name, rq_counter, is_registered, subjects_list)
+    def __init__(self, name, rq_counter=0, is_registered=False, subjects=None):
+        super().__init__(name, rq_counter, is_registered, subjects)
 
     async def start_client(self, server_ip, server_port):
         self.server_ip = server_ip

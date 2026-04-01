@@ -42,7 +42,7 @@ async def test_client():
     await client.deregister()
     await client.register()  # Attempt to register again to test duplicate handling
     await client.update()
-    await client.subjects("Subject3", "Subject4")
+    await client.subjects_update("Subject3", "Subject4")
     await client.deregister()
 
     #UDP tests
