@@ -137,6 +137,21 @@ class Database:
             {"name": row[0], "ip": row[1], "udp_port": row[2]}
             for row in cur.fetchall()
         ]
+    def list_users(self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT name, ip, tcp_port, udp_port, server FROM users ORDER BY name")
+        rows = cur.fetchall()
+
+        return [
+            {
+                "name": row[0],
+                "ip": row[1],
+                "tcp_port": row[2],
+                "udp_port": row[3],
+                "server": row[4],
+            }
+        for row in rows
+    ]
 
     def user_has_subject(self, name, subject):
         cur = self.conn.cursor()
@@ -145,3 +160,5 @@ class Database:
             (name, subject),
         )
         return cur.fetchone() is not None
+    
+    

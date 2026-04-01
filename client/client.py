@@ -174,9 +174,15 @@ class TcpClient(BaseClient):
             await self.handle_subjects_updated(fields)
         elif op == C.SUBJECTS_REJECTED:
             await self.handle_subjects_rejected(fields)
+        elif op == C.USERS_LIST:
+            await self.handle_users_list(fields)
         else:
             debug(f"[TCP] Unknown op: {op}")
-
+    async def handle_users_list(self, fields):
+    # fields[0] is rq id
+        users = fields[1:]
+        ui("USERS-LIST|" + ",".join(users))
+        
     async def handle_registered(self, fields):
         self.is_registered = True
         ui("REGISTERED")
@@ -194,7 +200,7 @@ class TcpClient(BaseClient):
         ui(f"UPDATE-DENIED|{fields[1]}")
 
     async def handle_subjects_updated(self, fields):
-        self.subjects = fields[2:]
+        self.subjects_list = fields[2:]
         ui("SUBJECTS-UPDATED")
 
     async def handle_subjects_rejected(self, fields):
