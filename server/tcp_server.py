@@ -183,6 +183,20 @@ async def handle_subjects(ctx, writer, fields):
 
     return False
 
+@register_handler(C.LIST_USERS)
+async def handle_list_users(ctx, writer, fields):
+    if len(fields) != 1:
+        _send(ctx, writer, encode(C.USERS_LIST, "0"))
+        return False
+
+    rq = fields[0]
+
+    users = ctx.db.list_users()   # you will add this in persistence.py
+
+    names = [user["name"] for user in users]
+
+    _send(ctx, writer, encode(C.USERS_LIST, rq, *names))
+    return False
 
 async def handle_client(reader, writer, ctx):
     addr = writer.get_extra_info("peername")

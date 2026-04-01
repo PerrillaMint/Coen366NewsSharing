@@ -1,4 +1,6 @@
-﻿namespace NSS
+﻿using System;
+
+namespace NSS
 {
     partial class Form1
     {
@@ -46,22 +48,23 @@
             this.name_1_lb = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.updatesubjects_2_btn = new System.Windows.Forms.Button();
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.updatesubjects_2_bt = new System.Windows.Forms.Button();
+            this.subjects_2_clb = new System.Windows.Forms.CheckedListBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.publish_2_bt = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.publish_3_bt = new System.Windows.Forms.Button();
+            this.publishtext_3_tb = new System.Windows.Forms.TextBox();
             this.text_2_tb = new System.Windows.Forms.Label();
-            this.title_2_tb = new System.Windows.Forms.TextBox();
+            this.title_3_tb = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.subject_2_lb = new System.Windows.Forms.Label();
-            this.subject_2_cb = new System.Windows.Forms.ComboBox();
+            this.subject_3_cb = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.comment_3_bt = new System.Windows.Forms.Button();
+            this.comment_4_bt = new System.Windows.Forms.Button();
             this.comment_3_lb = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.incoming_3_ltb = new System.Windows.Forms.ListBox();
+            this.comment_4_tb = new System.Windows.Forms.TextBox();
             this.title_lb = new System.Windows.Forms.Label();
+            this.clients_1_cb = new System.Windows.Forms.ComboBox();
+            this.incoming_3_ltb = new System.Windows.Forms.RichTextBox();
             this.connection_info_gp.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -222,8 +225,8 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.updatesubjects_2_btn);
-            this.groupBox1.Controls.Add(this.checkedListBox1);
+            this.groupBox1.Controls.Add(this.updatesubjects_2_bt);
+            this.groupBox1.Controls.Add(this.subjects_2_clb);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(12, 200);
             this.groupBox1.Name = "groupBox1";
@@ -232,19 +235,19 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Subjects";
             // 
-            // updatesubjects_2_btn
+            // updatesubjects_2_bt
             // 
-            this.updatesubjects_2_btn.Location = new System.Drawing.Point(214, 44);
-            this.updatesubjects_2_btn.Name = "updatesubjects_2_btn";
-            this.updatesubjects_2_btn.Size = new System.Drawing.Size(116, 30);
-            this.updatesubjects_2_btn.TabIndex = 14;
-            this.updatesubjects_2_btn.Text = "Update Subjects";
-            this.updatesubjects_2_btn.UseVisualStyleBackColor = true;
+            this.updatesubjects_2_bt.Location = new System.Drawing.Point(214, 44);
+            this.updatesubjects_2_bt.Name = "updatesubjects_2_bt";
+            this.updatesubjects_2_bt.Size = new System.Drawing.Size(116, 30);
+            this.updatesubjects_2_bt.TabIndex = 14;
+            this.updatesubjects_2_bt.Text = "Update Subjects";
+            this.updatesubjects_2_bt.UseVisualStyleBackColor = true;
             // 
-            // checkedListBox1
+            // subjects_2_clb
             // 
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Items.AddRange(new object[] {
+            this.subjects_2_clb.FormattingEnabled = true;
+            this.subjects_2_clb.Items.AddRange(new object[] {
             "Sports",
             "Entertainment",
             "Health",
@@ -253,21 +256,21 @@
             "Politics",
             "Business",
             "                                                     "});
-            this.checkedListBox1.Location = new System.Drawing.Point(9, 21);
-            this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(180, 89);
-            this.checkedListBox1.TabIndex = 0;
-            this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
+            this.subjects_2_clb.Location = new System.Drawing.Point(9, 21);
+            this.subjects_2_clb.Name = "subjects_2_clb";
+            this.subjects_2_clb.Size = new System.Drawing.Size(180, 89);
+            this.subjects_2_clb.TabIndex = 0;
+            this.subjects_2_clb.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.publish_2_bt);
-            this.groupBox2.Controls.Add(this.textBox1);
+            this.groupBox2.Controls.Add(this.publish_3_bt);
+            this.groupBox2.Controls.Add(this.publishtext_3_tb);
             this.groupBox2.Controls.Add(this.text_2_tb);
-            this.groupBox2.Controls.Add(this.title_2_tb);
+            this.groupBox2.Controls.Add(this.title_3_tb);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.subject_2_lb);
-            this.groupBox2.Controls.Add(this.subject_2_cb);
+            this.groupBox2.Controls.Add(this.subject_3_cb);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(12, 340);
             this.groupBox2.Name = "groupBox2";
@@ -276,22 +279,22 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Publish News";
             // 
-            // publish_2_bt
+            // publish_3_bt
             // 
-            this.publish_2_bt.Location = new System.Drawing.Point(395, 26);
-            this.publish_2_bt.Name = "publish_2_bt";
-            this.publish_2_bt.Size = new System.Drawing.Size(92, 30);
-            this.publish_2_bt.TabIndex = 14;
-            this.publish_2_bt.Text = "Publish";
-            this.publish_2_bt.UseVisualStyleBackColor = true;
+            this.publish_3_bt.Location = new System.Drawing.Point(395, 26);
+            this.publish_3_bt.Name = "publish_3_bt";
+            this.publish_3_bt.Size = new System.Drawing.Size(92, 30);
+            this.publish_3_bt.TabIndex = 14;
+            this.publish_3_bt.Text = "Publish";
+            this.publish_3_bt.UseVisualStyleBackColor = true;
             // 
-            // textBox1
+            // publishtext_3_tb
             // 
-            this.textBox1.Location = new System.Drawing.Point(76, 89);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(526, 22);
-            this.textBox1.TabIndex = 8;
+            this.publishtext_3_tb.Location = new System.Drawing.Point(76, 89);
+            this.publishtext_3_tb.Multiline = true;
+            this.publishtext_3_tb.Name = "publishtext_3_tb";
+            this.publishtext_3_tb.Size = new System.Drawing.Size(526, 22);
+            this.publishtext_3_tb.TabIndex = 8;
             // 
             // text_2_tb
             // 
@@ -302,12 +305,12 @@
             this.text_2_tb.TabIndex = 7;
             this.text_2_tb.Text = "Text:";
             // 
-            // title_2_tb
+            // title_3_tb
             // 
-            this.title_2_tb.Location = new System.Drawing.Point(76, 53);
-            this.title_2_tb.Name = "title_2_tb";
-            this.title_2_tb.Size = new System.Drawing.Size(121, 22);
-            this.title_2_tb.TabIndex = 6;
+            this.title_3_tb.Location = new System.Drawing.Point(76, 53);
+            this.title_3_tb.Name = "title_3_tb";
+            this.title_3_tb.Size = new System.Drawing.Size(121, 22);
+            this.title_3_tb.TabIndex = 6;
             // 
             // label1
             // 
@@ -328,20 +331,20 @@
             this.subject_2_lb.TabIndex = 1;
             this.subject_2_lb.Text = "Subject:";
             // 
-            // subject_2_cb
+            // subject_3_cb
             // 
-            this.subject_2_cb.FormattingEnabled = true;
-            this.subject_2_cb.Location = new System.Drawing.Point(76, 23);
-            this.subject_2_cb.Name = "subject_2_cb";
-            this.subject_2_cb.Size = new System.Drawing.Size(121, 24);
-            this.subject_2_cb.TabIndex = 0;
+            this.subject_3_cb.FormattingEnabled = true;
+            this.subject_3_cb.Location = new System.Drawing.Point(76, 23);
+            this.subject_3_cb.Name = "subject_3_cb";
+            this.subject_3_cb.Size = new System.Drawing.Size(121, 24);
+            this.subject_3_cb.TabIndex = 0;
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.comment_3_bt);
-            this.groupBox3.Controls.Add(this.comment_3_lb);
-            this.groupBox3.Controls.Add(this.textBox2);
             this.groupBox3.Controls.Add(this.incoming_3_ltb);
+            this.groupBox3.Controls.Add(this.comment_4_bt);
+            this.groupBox3.Controls.Add(this.comment_3_lb);
+            this.groupBox3.Controls.Add(this.comment_4_tb);
             this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox3.Location = new System.Drawing.Point(12, 480);
             this.groupBox3.Name = "groupBox3";
@@ -350,14 +353,14 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Incoming Feed / Messages";
             // 
-            // comment_3_bt
+            // comment_4_bt
             // 
-            this.comment_3_bt.Location = new System.Drawing.Point(526, 126);
-            this.comment_3_bt.Name = "comment_3_bt";
-            this.comment_3_bt.Size = new System.Drawing.Size(93, 26);
-            this.comment_3_bt.TabIndex = 15;
-            this.comment_3_bt.Text = "Comment";
-            this.comment_3_bt.UseVisualStyleBackColor = true;
+            this.comment_4_bt.Location = new System.Drawing.Point(526, 126);
+            this.comment_4_bt.Name = "comment_4_bt";
+            this.comment_4_bt.Size = new System.Drawing.Size(93, 26);
+            this.comment_4_bt.TabIndex = 15;
+            this.comment_4_bt.Text = "Comment";
+            this.comment_4_bt.UseVisualStyleBackColor = true;
             // 
             // comment_3_lb
             // 
@@ -368,22 +371,13 @@
             this.comment_3_lb.TabIndex = 8;
             this.comment_3_lb.Text = "Comment:";
             // 
-            // textBox2
+            // comment_4_tb
             // 
-            this.textBox2.Location = new System.Drawing.Point(83, 128);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(437, 24);
-            this.textBox2.TabIndex = 1;
-            // 
-            // incoming_3_ltb
-            // 
-            this.incoming_3_ltb.FormattingEnabled = true;
-            this.incoming_3_ltb.ItemHeight = 16;
-            this.incoming_3_ltb.Location = new System.Drawing.Point(9, 26);
-            this.incoming_3_ltb.Name = "incoming_3_ltb";
-            this.incoming_3_ltb.Size = new System.Drawing.Size(592, 84);
-            this.incoming_3_ltb.TabIndex = 0;
+            this.comment_4_tb.Location = new System.Drawing.Point(83, 128);
+            this.comment_4_tb.Multiline = true;
+            this.comment_4_tb.Name = "comment_4_tb";
+            this.comment_4_tb.Size = new System.Drawing.Size(437, 24);
+            this.comment_4_tb.TabIndex = 1;
             // 
             // title_lb
             // 
@@ -395,11 +389,28 @@
             this.title_lb.TabIndex = 2;
             this.title_lb.Text = "NSS Client";
             // 
+            // clients_1_cb
+            // 
+            this.clients_1_cb.FormattingEnabled = true;
+            this.clients_1_cb.Location = new System.Drawing.Point(129, 21);
+            this.clients_1_cb.Name = "clients_1_cb";
+            this.clients_1_cb.Size = new System.Drawing.Size(121, 21);
+            this.clients_1_cb.TabIndex = 3;
+            // 
+            // incoming_3_ltb
+            // 
+            this.incoming_3_ltb.Location = new System.Drawing.Point(3, 18);
+            this.incoming_3_ltb.Name = "incoming_3_ltb";
+            this.incoming_3_ltb.Size = new System.Drawing.Size(616, 96);
+            this.incoming_3_ltb.TabIndex = 16;
+            this.incoming_3_ltb.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(649, 675);
+            this.Controls.Add(this.clients_1_cb);
             this.Controls.Add(this.title_lb);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -418,6 +429,31 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        private void label1_Click_1(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void name_1_tb_TextChanged(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void ip_1_lb_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
         }
 
         #endregion
@@ -440,22 +476,23 @@
         private System.Windows.Forms.Label servertcp_1_lb;
         private System.Windows.Forms.TextBox server_1_tb;
         private System.Windows.Forms.Label server_1_lb;
-        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.CheckedListBox subjects_2_clb;
         private System.Windows.Forms.Button update_1_bt;
         private System.Windows.Forms.Button deregister_1_bt;
         private System.Windows.Forms.Button register_1_bt;
-        private System.Windows.Forms.Button updatesubjects_2_btn;
-        private System.Windows.Forms.TextBox title_2_tb;
+        private System.Windows.Forms.Button updatesubjects_2_bt;
+        private System.Windows.Forms.TextBox title_3_tb;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label subject_2_lb;
-        private System.Windows.Forms.ComboBox subject_2_cb;
+        private System.Windows.Forms.ComboBox subject_3_cb;
         private System.Windows.Forms.Label text_2_tb;
-        private System.Windows.Forms.Button publish_2_bt;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.ListBox incoming_3_ltb;
-        private System.Windows.Forms.Button comment_3_bt;
+        private System.Windows.Forms.Button publish_3_bt;
+        private System.Windows.Forms.TextBox publishtext_3_tb;
+        private System.Windows.Forms.TextBox comment_4_tb;
+        private System.Windows.Forms.Button comment_4_bt;
         private System.Windows.Forms.Label comment_3_lb;
+        private System.Windows.Forms.ComboBox clients_1_cb;
+        private System.Windows.Forms.RichTextBox incoming_3_ltb;
     }
 }
 
