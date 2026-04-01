@@ -29,7 +29,8 @@ def load_config(server_id=None):
             "host": "0.0.0.0",
             "tcp_port": 10001,
             "udp_port": 20001,
-            "region_prefixes": ["192.168."],
+            "region_prefixes": ["10."],
+            #"region_prefixes": ["192.168."],
             # Peer server info (Server A)
             "peer_ip": "127.0.0.1",
             "peer_udp_port": 20000,

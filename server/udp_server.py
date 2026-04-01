@@ -15,7 +15,7 @@ class UDPServerProtocol(asyncio.DatagramProtocol):
 
     def __init__(self, ctx):
         self.ctx = ctx
-        self.transport = None
+        self.transport: asyncio.DatagramTransport | None = None
         # Maps msg_id -> asyncio.Event for FORWARD-ACK tracking
         self.pending_forward_acks = {}
 
@@ -220,7 +220,7 @@ class UDPServerProtocol(asyncio.DatagramProtocol):
             self.ctx.log.info(
                 f"UDP TX to peer {peer_addr} (attempt {attempt + 1}): "
                 f"{msg.strip()}")
-            self.transport.sendto(msg.encode(), peer_addr)
+            self.transport.sendto(msg.encode(), peer_addr)  # type: ignore
 
             try:
                 await asyncio.wait_for(evt.wait(), timeout=PEER_ACK_TIMEOUT)
@@ -251,12 +251,12 @@ class UDPServerProtocol(asyncio.DatagramProtocol):
 
     def _send_to(self, addr, msg):
         self.ctx.log.info(f"UDP TX to {addr}: {msg.strip()}")
-        self.transport.sendto(msg.encode(), addr)
+        self.transport.sendto(msg.encode(), addr)  # type: ignore
 
     def _send_to_peer(self, msg):
         peer_addr = (self.ctx.peer_ip, self.ctx.peer_udp_port)
         self.ctx.log.info(f"UDP TX to peer {peer_addr}: {msg.strip()}")
-        self.transport.sendto(msg.encode(), peer_addr)
+        self.transport.sendto(msg.encode(), peer_addr)  # type: ignore
 
 
 async def run_udp_server(ctx):
