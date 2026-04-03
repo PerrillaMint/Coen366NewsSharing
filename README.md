@@ -32,3 +32,31 @@ Server TCP: 10000
 ----------------------------------------
 click Register
 ```
+
+## Start Servers
+
+``` powershell
+----------------------------------------
+### If IPs are unknown, discover then configure
+
+# Terminal 1 - Start Server A (it will wait for input)
+python -m server.main A
+
+# Terminal 2 - Start Server B first (similar prompt)
+python -m server.main B 
+
+# Now you can feed the IP addresses at each prompt
+----------------------------------------
+```
+
+## Start Clients
+
+``` powershell
+----------------------------------------
+# With server IP specified
+python -m create_client ClientName 192.168.1.100
+
+# Without server IP (defaults to 127.0.0.1)
+python -m create_client ClientName
+----------------------------------------
+```

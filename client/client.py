@@ -54,7 +54,7 @@ class BaseClient(ABC):
             loop = asyncio.get_running_loop()
             transport, _ = await loop.create_datagram_endpoint(
                 lambda: asyncio.DatagramProtocol(),
-                remote_addr=("8.8.8.8", 1)
+                remote_addr=("8.8.8.8", 80)
             )
             return transport.get_extra_info("sockname")[0]
         except Exception as e:
