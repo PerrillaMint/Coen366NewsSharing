@@ -43,3 +43,5 @@ VALID_SUBJECTS = [
     "Business",
     "Health",
 ]
+
+MAX_SUBJECTS = VALID_SUBJECTS.__len__()

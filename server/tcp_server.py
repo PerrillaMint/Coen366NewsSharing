@@ -31,6 +31,9 @@ def _is_valid_ip(ip: str) -> bool:
 async def _check_name_on_peer(ctx, rq, name):
     if ctx.udp_transport is None:
         return False
+    
+    if ctx.peer_ip == "127.0.0.1" :
+        return False
 
     loop = asyncio.get_running_loop()
     future = loop.create_future()
@@ -59,8 +62,20 @@ async def handle_register(ctx, writer, fields):
 
     rq, name, ip, tcp_s, udp_s = fields
 
+    #check if name exists in this server already
+    if ctx.db.user_exists(name):
+        _send(ctx, writer, encode(C.REGISTER_DENIED, rq, "Name already registered"))
+        return False
+    
     if not _is_valid_ip(ip):
         _send(ctx, writer, encode(C.REGISTER_DENIED, rq, "Invalid IP address"))
+        return False
+    
+    
+    exists_on_peer = await _check_name_on_peer(ctx, rq, name)
+    if exists_on_peer:
+        _send(ctx, writer, encode(C.REGISTER_DENIED, rq,
+                                  "Name already registered on another server"))
         return False
 
     if not ctx.is_ip_in_region(ip):
@@ -76,11 +91,7 @@ async def handle_register(ctx, writer, fields):
         _send(ctx, writer, encode(C.REGISTER_DENIED, rq, "Invalid port number"))
         return False
 
-    exists_on_peer = await _check_name_on_peer(ctx, rq, name)
-    if exists_on_peer:
-        _send(ctx, writer, encode(C.REGISTER_DENIED, rq,
-                                  "Name already registered on another server"))
-        return False
+    #TODO: After regular checks, can implement a balancing mechanism here to refer to peer if this server is too full
 
     ok, reason = ctx.db.register_user(name, ip, tcp_port, udp_port, ctx.server_name)
 
@@ -111,6 +122,7 @@ async def handle_deregister(ctx, writer, fields):
 
 @register_handler(C.UPDATE)
 async def handle_update(ctx, writer, fields):
+
     if len(fields) != 5:
         _send(ctx, writer, encode(C.UPDATE_DENIED, "0", "Bad field count"))
         return False

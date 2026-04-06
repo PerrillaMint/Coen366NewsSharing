@@ -30,6 +30,7 @@ class BaseClient(ABC):
         self.rq_counter = rq_counter
         self.is_registered = is_registered
         self.subjects = subjects or []
+        self.referred = False
 
     async def init_network_info(self):
         self.client_ip = await self.get_my_ip()
@@ -64,6 +65,7 @@ class BaseClient(ABC):
             if transport:
                 transport.close()
 
+####################################################################################
 
 class TcpClient(BaseClient):
 
@@ -104,6 +106,7 @@ class TcpClient(BaseClient):
             if ok:
                 debug("[TCP] Successfully reconnected")
             else:
+                debug("[TCP] Reconnection Failed")
                 return
 
         try:
@@ -148,14 +151,23 @@ class TcpClient(BaseClient):
         await self.send_message(msg)
 
     async def update(self):
+        #IN CASE OF THE AN EXISTING USER RECONNECTING ON A DIFFERENT PC
         rq = await self.get_next_rq()
         msg = encode(C.UPDATE, rq, self.name, self.client_ip, self.tcp_port, self.udp_port)
         await self.send_message(msg)
 
     async def subjects_update(self, *subjects):
-        rq = await self.get_next_rq()
-        msg = encode(C.SUBJECTS, rq, self.name, *subjects)
-        await self.send_message(msg)
+        try:
+            if len(subjects) > C.MAX_SUBJECTS:
+                raise Exception(f"Too many subjects. Max allowed is {C.MAX_SUBJECTS}.")
+            if any(subject not in C.VALID_SUBJECTS for subject in subjects):
+                raise Exception(f"Invalid subject(s). Valid subjects are: {', '.join(C.VALID_SUBJECTS)}")
+
+            rq = await self.get_next_rq()
+            msg = encode(C.SUBJECTS, rq, self.name, *subjects)
+            await self.send_message(msg)
+        except Exception as e:
+            ui(f"ERROR|SUBJECTS update failed: {e}")
 
     async def handle_server_message(self, data: str):
         op, fields = decode_line(data)
@@ -188,16 +200,61 @@ class TcpClient(BaseClient):
         ui("REGISTERED")
 
     async def handle_register_denied(self, fields):
+        #TODO: RETRY LOGIC IN CASE OF REGISTER DENIED
         ui(f"REGISTER-DENIED|{fields[1]}")
+        
+        try:
+            if fields[1] == "Bad field count":
+                raise Exception(fields[1])
+            elif fields[1] == "Invalid IP address":
+                raise Exception(fields[1])
+            elif fields[1] == "Name already registered":
+                #assume its a new user
+                raise Exception(fields[1])
+            elif fields[1] == "Invalid IP address":
+                raise Exception(fields[1])
+            elif fields[1] == "Invalid port number":
+                raise Exception(fields[1])
+            else:
+                #attempt to reconnect to the server after a delay, in case of transient network issues
+                ui(f"INFO|Retrying registration in 1 seconds...")
+                #after 2 attempts, the client should give up
+                if hasattr(self, 'retry_count'):
+                    self.retry_count += 1
+                    if self.retry_count > 1:
+                        ui(f"ERROR|Registration failed after 2 attempts. Please check your network connection and try again later.")
+                        raise Exception("Registration failed after 2 attempts")
+                    else:
+                        ui(f"INFO|Retry attempt {self.retry_count}/2")
+                else:               
+                    self.retry_count = 1
+                await asyncio.sleep(2)
+                await self.register()
+
+        except Exception as e:
+            ui(f"ERROR|Registration failed: {e}")
+        finally:
+            ui(f"CLIENT EXITING")
+            await self.close()
 
     async def handle_refer(self, fields):
         ui(f"REFER|{fields[1]}")
+        self.referred = True
+        #REFER LOGIC TO CONNECT TO THE REFERRED SERVER
+        await self.close()
+        await self.start_client(fields[1], self.server_port)
+        #attempt update, then register if it fails (prevents a new user from overwriting an existing users info)
+        await self.update()
 
     async def handle_update_confirmed(self, fields):
         ui("UPDATE-CONFIRMED")
+        self.referred = False
 
     async def handle_update_denied(self, fields):
         ui(f"UPDATE-DENIED|{fields[1]}")
+        if self.referred:
+            self.referred = False
+            await self.register()
 
     async def handle_subjects_updated(self, fields):
         self.subjects_list = fields[2:]
@@ -206,7 +263,7 @@ class TcpClient(BaseClient):
     async def handle_subjects_rejected(self, fields):
         ui("SUBJECTS-REJECTED")
 
-
+####################################################################################
 class UdpClient(BaseClient):
 
     def __init__(self, name, rq_counter=0, is_registered=False, subjects=None):
@@ -231,13 +288,35 @@ class UdpClient(BaseClient):
                 transport.close()
 
     async def publish(self, subject, title, text):
-        rq = await self.get_next_rq()
-        msg = encode(C.PUBLISH, rq, self.name, subject, title, text)
-        await self.send_message(msg)
+        try:
+            if len(str(title)) > 100 :
+                raise Exception ("title too long")
+            
+            if len(str(text)) > 1000 :
+                raise Exception ("text too long")
+        
+            rq = await self.get_next_rq()
+            msg = encode(C.PUBLISH, rq, self.name, subject, title, text)
+            await self.send_message(msg)
+
+        except Exception as e:
+            ui(f"ERROR|UDP: {e}") 
 
     async def publish_comment(self, subject, title, text):
-        msg = encode(C.PUBLISH_COMMENT, self.name, subject, title, text)
-        await self.send_message(msg)
+        try:
+            if len(str(title)) > 100 :
+                raise Exception ("title too long")
+            
+            if len(str(text)) > 500 :
+                raise Exception ("comment too long")
+        
+            rq = await self.get_next_rq()
+            msg = encode(C.PUBLISH_COMMENT, self.name, subject, title, text)
+            await self.send_message(msg)
+
+        except Exception as e:
+            ui(f"ERROR|UDP: {e}")
+        
 
     async def datagram_received(self, data, addr):
         try:
@@ -264,7 +343,21 @@ class UdpClient(BaseClient):
         ui(f"PUBLISH-DENIED|{fields[1]}")
 
     async def handle_message(self, fields, addr):
-        ui(f"MESSAGE|{fields[0]}|{fields[1]}|{fields[2]}|{fields[3]}")
+        #CHECK IF USER IS THE ONE WHO PUBLISHED THE MESSAGE TO AVOID FORWARDING TO THE UI
+        if fields[0] == self.name:
+            return
+        else:
+            ui(f"MESSAGE|{fields[0]}|{fields[1]}|{fields[2]}|{fields[3]}")
+            #USER CAN COMMENT IN RESPONSE TO A MESSAGE
+            comment = await asyncio.get_event_loop().run_in_executor(None, input, "Enter comment (or press enter to skip): ")
+            if comment.strip():
+                await self.publish_comment(fields[1], fields[2], comment)
+
 
     async def handle_comment(self, fields, addr):
-        ui(f"COMMENT|{fields[0]}|{fields[1]}|{fields[2]}|{fields[3]}")
+        #CHECK IF USER IS THE ONE WHO PUBLISHED THE COMMENT TO AVOID FORWARDING TO THE UI
+        if fields[0] == self.name:
+            return
+        else:
+            ui(f"COMMENT|{fields[0]}|{fields[1]}|{fields[2]}|{fields[3]}")
+

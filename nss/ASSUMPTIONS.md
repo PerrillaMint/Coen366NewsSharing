@@ -1,0 +1,3 @@
+- users who register are trying to register anew 
+- the purpose of the update function is for pre-registered users to reconnect from a different computer
+- users who update already know that they are registered and are not attempting to overwrite someone's account data
