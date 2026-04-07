@@ -37,7 +37,20 @@ class Database:
 
         self.conn.execute("PRAGMA foreign_keys = ON")
         self.conn.commit()
-
+    def get_user_by_ip(self, ip):
+        cur = self.conn.cursor()
+        cur.execute("SELECT * FROM users WHERE ip=?", (ip,))
+        row = cur.fetchone()
+        if not row:
+            return None
+        return {
+            "name": row[0],
+            "ip": row[1],
+            "tcp_port": row[2],
+            "udp_port": row[3],
+            "server": row[4],
+            "updated": row[5],
+        }
     #  Registration
     def register_user(self, name, ip, tcp_port, udp_port, server):
 

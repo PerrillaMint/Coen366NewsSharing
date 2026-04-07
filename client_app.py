@@ -12,6 +12,29 @@ server_db = None
 clients = {}
 active_client_key = None
 
+async def handle_init_client(parts):
+    global server_cfg, server_db
+
+    try:
+        if server_db is None or server_cfg is None:
+            out("ERROR|Server DB not initialized")
+            return
+
+        temp_client = TcpClient("temp")
+        await temp_client.init_network_info()
+        local_ip = temp_client.client_ip
+
+        user = server_db.get_user_by_ip(local_ip)
+        if user is None:
+            out(f"ERROR|No registered client found for IP {local_ip}")
+            return
+
+        out(
+            f"CLIENT-INIT|{user['name']}|{user['ip']}|{user['tcp_port']}|{user['udp_port']}|"
+            f"{server_cfg['host']}|{server_cfg['tcp_port']}"
+        )
+    except Exception as e:
+        out(f"ERROR|INIT_CLIENT failed: {e}")
 
 def out(msg: str):
     print(msg, flush=True)
@@ -280,6 +303,8 @@ async def main():
 
             if cmd == "PING":
                 out("PONG")
+            elif cmd == "INIT_CLIENT":
+                await handle_init_client(parts)
             elif cmd == "INIT_SERVER":
                 await handle_init_server(parts)
             elif cmd == "REGISTER":

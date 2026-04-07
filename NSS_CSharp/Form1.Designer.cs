@@ -67,17 +67,6 @@ namespace NSS
             this.clients_2_cb = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.feed_2_rtb = new System.Windows.Forms.RichTextBox();
-            this.comment_2_bt = new System.Windows.Forms.Button();
-            this.label20 = new System.Windows.Forms.Label();
-            this.comment_2_tb = new System.Windows.Forms.TextBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.publish_2_bt = new System.Windows.Forms.Button();
-            this.text_2_tb = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.title_2_tb = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.subject_2_cb = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.update_2_bt = new System.Windows.Forms.Button();
             this.deRegister_2_bt = new System.Windows.Forms.Button();
@@ -102,7 +91,6 @@ namespace NSS
             this.groupBox4.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -422,7 +410,6 @@ namespace NSS
             // 
             this.tabPage2.Controls.Add(this.clients_2_cb);
             this.tabPage2.Controls.Add(this.groupBox3);
-            this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.title2_lb);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
@@ -445,9 +432,6 @@ namespace NSS
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.feed_2_rtb);
-            this.groupBox3.Controls.Add(this.comment_2_bt);
-            this.groupBox3.Controls.Add(this.label20);
-            this.groupBox3.Controls.Add(this.comment_2_tb);
             this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox3.Location = new System.Drawing.Point(3, 375);
             this.groupBox3.Name = "groupBox3";
@@ -463,108 +447,6 @@ namespace NSS
             this.feed_2_rtb.Size = new System.Drawing.Size(616, 96);
             this.feed_2_rtb.TabIndex = 16;
             this.feed_2_rtb.Text = "";
-            // 
-            // comment_2_bt
-            // 
-            this.comment_2_bt.Location = new System.Drawing.Point(526, 126);
-            this.comment_2_bt.Name = "comment_2_bt";
-            this.comment_2_bt.Size = new System.Drawing.Size(93, 26);
-            this.comment_2_bt.TabIndex = 15;
-            this.comment_2_bt.Text = "Comment";
-            this.comment_2_bt.UseVisualStyleBackColor = true;
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(10, 131);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(67, 16);
-            this.label20.TabIndex = 8;
-            this.label20.Text = "Comment:";
-            // 
-            // comment_2_tb
-            // 
-            this.comment_2_tb.Location = new System.Drawing.Point(83, 128);
-            this.comment_2_tb.Multiline = true;
-            this.comment_2_tb.Name = "comment_2_tb";
-            this.comment_2_tb.Size = new System.Drawing.Size(437, 24);
-            this.comment_2_tb.TabIndex = 1;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.publish_2_bt);
-            this.groupBox2.Controls.Add(this.text_2_tb);
-            this.groupBox2.Controls.Add(this.label17);
-            this.groupBox2.Controls.Add(this.title_2_tb);
-            this.groupBox2.Controls.Add(this.label18);
-            this.groupBox2.Controls.Add(this.label19);
-            this.groupBox2.Controls.Add(this.subject_2_cb);
-            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(3, 219);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(625, 134);
-            this.groupBox2.TabIndex = 9;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Publish News";
-            // 
-            // publish_2_bt
-            // 
-            this.publish_2_bt.Location = new System.Drawing.Point(395, 26);
-            this.publish_2_bt.Name = "publish_2_bt";
-            this.publish_2_bt.Size = new System.Drawing.Size(92, 30);
-            this.publish_2_bt.TabIndex = 14;
-            this.publish_2_bt.Text = "Publish";
-            this.publish_2_bt.UseVisualStyleBackColor = true;
-            // 
-            // text_2_tb
-            // 
-            this.text_2_tb.Location = new System.Drawing.Point(76, 89);
-            this.text_2_tb.Multiline = true;
-            this.text_2_tb.Name = "text_2_tb";
-            this.text_2_tb.Size = new System.Drawing.Size(526, 22);
-            this.text_2_tb.TabIndex = 8;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(17, 89);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(36, 16);
-            this.label17.TabIndex = 7;
-            this.label17.Text = "Text:";
-            // 
-            // title_2_tb
-            // 
-            this.title_2_tb.Location = new System.Drawing.Point(76, 53);
-            this.title_2_tb.Name = "title_2_tb";
-            this.title_2_tb.Size = new System.Drawing.Size(121, 22);
-            this.title_2_tb.TabIndex = 6;
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(15, 56);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(36, 16);
-            this.label18.TabIndex = 2;
-            this.label18.Text = "Title:";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(15, 26);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(55, 16);
-            this.label19.TabIndex = 1;
-            this.label19.Text = "Subject:";
-            // 
-            // subject_2_cb
-            // 
-            this.subject_2_cb.FormattingEnabled = true;
-            this.subject_2_cb.Location = new System.Drawing.Point(76, 23);
-            this.subject_2_cb.Name = "subject_2_cb";
-            this.subject_2_cb.Size = new System.Drawing.Size(121, 24);
-            this.subject_2_cb.TabIndex = 0;
             // 
             // groupBox1
             // 
@@ -748,9 +630,6 @@ namespace NSS
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -836,17 +715,6 @@ namespace NSS
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RichTextBox feed_2_rtb;
-        private System.Windows.Forms.Button comment_2_bt;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.TextBox comment_2_tb;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button publish_2_bt;
-        private System.Windows.Forms.TextBox text_2_tb;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.TextBox title_2_tb;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.ComboBox subject_2_cb;
         private System.Windows.Forms.ComboBox clients_2_cb;
     }
 }

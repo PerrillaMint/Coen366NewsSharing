@@ -10,7 +10,7 @@ namespace NSS
     public partial class Form1 : Form
     {
 
-        private bool isServerMode = true;   // true = server side active, false = client side active
+        private bool isServerMode = false;   // true = server side active, false = client side active
         private bool isServerA = true;      // true = Server A, false = Server B
 
 
@@ -29,11 +29,37 @@ namespace NSS
             string serverId = isServerA ? "A" : "B";
             SendCommand($"INIT_SERVER {serverId}");
         }
+        private void ApplyClientInit(string line)
+        {
+            string[] parts = line.Split('|');
+
+            // CLIENT-INIT|name|ip|tcpPort|udpPort|serverIp|serverTcp
+            if (parts.Length < 7)
+                return;
+
+            if (!isServerMode)
+            {
+                name_1_tb.Text = parts[1];
+                ip_1_tb.Text = parts[2];
+                tcpPort_1_tb.Text = parts[3];
+                udpPort_1_tb.Text = parts[4];
+                serverIp_1_tb.Text = parts[5];
+                serverTcp_1_tb.Text = parts[6];
+
+                name_1_tb.ReadOnly = true;
+                ip_1_tb.ReadOnly = true;
+                tcpPort_1_tb.ReadOnly = true;
+                udpPort_1_tb.ReadOnly = true;
+                serverIp_1_tb.ReadOnly = true;
+                serverTcp_1_tb.ReadOnly = true;
+            }
+        }
         private void InitializeClientSide()
         {
-            // Leave empty for now
-            // We will add client-side init next
+            string serverId = isServerA ? "A" : "B";
+            SendCommand($"INIT_SERVER {serverId}");
         }
+       
 
         private void InitializeActiveSide()
         {
@@ -63,15 +89,7 @@ namespace NSS
             subject_1_cb.Items.Add("Politics");
             subject_1_cb.Items.Add("Business");
 
-            subject_2_cb.Items.Clear();
-
-            subject_2_cb.Items.Add("Sports");
-            subject_2_cb.Items.Add("Entertainment");
-            subject_2_cb.Items.Add("Health");
-            subject_2_cb.Items.Add("Science");
-            subject_2_cb.Items.Add("Technology");
-            subject_2_cb.Items.Add("Politics");
-            subject_2_cb.Items.Add("Business");
+           
         }
 
         private void StartPythonBridge()
@@ -151,6 +169,10 @@ namespace NSS
 
                 SendCommand($"LOADUSERS {serverIp_2_tb.Text} {tcpPort_2_tb.Text}");
             }
+            else
+            {
+                SendCommand("INIT_CLIENT");
+            }
         }
         private void clients_2_cb_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -182,6 +204,10 @@ namespace NSS
             else if (line.StartsWith("SERVER-INIT|"))
             {
                 ApplyServerInit(line);
+            }
+            else if (line.StartsWith("CLIENT-INIT|"))
+            {
+                ApplyClientInit(line);
             }
             else if (line.StartsWith("CLIENT-ADDED|"))
             {
@@ -277,10 +303,6 @@ namespace NSS
             string subjectsCsv = parts[8];
             string[] subjects = subjectsCsv.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (subjects.Length > 0)
-                subject_2_cb.SelectedItem = subjects[0];
-            else
-                subject_2_cb.SelectedIndex = -1;
         }
 
         private void ClearClientFields()
@@ -291,7 +313,7 @@ namespace NSS
             udpPort_2_tb.Text = "";
             serverIp_2_tb.Text = "";
             serverTcp_2_tb.Text = "";
-            subject_2_cb.SelectedIndex = -1;
+            
         }
 
         private void AppendIncoming(string text)
