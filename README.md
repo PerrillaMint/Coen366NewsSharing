@@ -28,10 +28,17 @@ python -m create_client [ClientName] [Server IP]
 
 ``` powershell
 cd Coen366NewsSharing/ NSS_CSharp
-Open NSS_CSharp.slnx
-Go to Form1.cs
-Change line 13  private bool isServerMode = true; if you are running server or private bool isServerMode = false; if it's a client. (We will bind this switch functionality to a radiobox later so we can change this variable on the UI)
-Change line 102 and set the path to pyhton.exe. You can find python.exe using "which python" command on terminal 
+Change line 304 and set the path to pyhton.exe. You can find python.exe using "which python" command on terminal 
 Example: string pythonExe = @"C:\Users\user1\AppData\Local\Microsoft\WindowsApps\python.exe";
 After starting the server using "python -m server.main" and registering clients you can run the Csharp form.
+
+```
+## Running the Form
+``` powershell
+Go to Coen366NewsSharing\NSS_CSharp\bin\Release
+run the NSS.exe with the following arguments:
+ "NSS.exe client" if this computer is a client
+ "NSS.exe server A" if this computer is a the server A
+ "NSS.exe server B" if this computer is a the server B
+
 ```

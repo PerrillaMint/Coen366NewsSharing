@@ -154,6 +154,7 @@ namespace NSS
             // 
             // serverTcp_1_tb
             // 
+            this.serverTcp_1_tb.Enabled = false;
             this.serverTcp_1_tb.Location = new System.Drawing.Point(265, 88);
             this.serverTcp_1_tb.Name = "serverTcp_1_tb";
             this.serverTcp_1_tb.ReadOnly = true;
@@ -171,6 +172,7 @@ namespace NSS
             // 
             // serverIp_1_tb
             // 
+            this.serverIp_1_tb.Enabled = false;
             this.serverIp_1_tb.Location = new System.Drawing.Point(76, 85);
             this.serverIp_1_tb.Name = "serverIp_1_tb";
             this.serverIp_1_tb.ReadOnly = true;
@@ -188,6 +190,7 @@ namespace NSS
             // 
             // udpPort_1_tb
             // 
+            this.udpPort_1_tb.Enabled = false;
             this.udpPort_1_tb.Location = new System.Drawing.Point(265, 55);
             this.udpPort_1_tb.Name = "udpPort_1_tb";
             this.udpPort_1_tb.ReadOnly = true;
@@ -205,6 +208,7 @@ namespace NSS
             // 
             // tcpPort_1_tb
             // 
+            this.tcpPort_1_tb.Enabled = false;
             this.tcpPort_1_tb.Location = new System.Drawing.Point(76, 55);
             this.tcpPort_1_tb.Name = "tcpPort_1_tb";
             this.tcpPort_1_tb.ReadOnly = true;
@@ -222,6 +226,7 @@ namespace NSS
             // 
             // ip_1_tb
             // 
+            this.ip_1_tb.Enabled = false;
             this.ip_1_tb.Location = new System.Drawing.Point(265, 25);
             this.ip_1_tb.Name = "ip_1_tb";
             this.ip_1_tb.ReadOnly = true;
@@ -239,6 +244,7 @@ namespace NSS
             // 
             // name_1_tb
             // 
+            this.name_1_tb.Enabled = false;
             this.name_1_tb.Location = new System.Drawing.Point(76, 27);
             this.name_1_tb.Name = "name_1_tb";
             this.name_1_tb.ReadOnly = true;
@@ -476,6 +482,7 @@ namespace NSS
             // 
             // serverTcp_2_tb
             // 
+            this.serverTcp_2_tb.Enabled = false;
             this.serverTcp_2_tb.Location = new System.Drawing.Point(265, 88);
             this.serverTcp_2_tb.Name = "serverTcp_2_tb";
             this.serverTcp_2_tb.ReadOnly = true;
@@ -493,6 +500,7 @@ namespace NSS
             // 
             // serverIp_2_tb
             // 
+            this.serverIp_2_tb.Enabled = false;
             this.serverIp_2_tb.Location = new System.Drawing.Point(76, 85);
             this.serverIp_2_tb.Name = "serverIp_2_tb";
             this.serverIp_2_tb.ReadOnly = true;
@@ -510,6 +518,7 @@ namespace NSS
             // 
             // udpPort_2_tb
             // 
+            this.udpPort_2_tb.Enabled = false;
             this.udpPort_2_tb.Location = new System.Drawing.Point(265, 55);
             this.udpPort_2_tb.Name = "udpPort_2_tb";
             this.udpPort_2_tb.ReadOnly = true;
@@ -527,6 +536,7 @@ namespace NSS
             // 
             // tcpPort_2_tb
             // 
+            this.tcpPort_2_tb.Enabled = false;
             this.tcpPort_2_tb.Location = new System.Drawing.Point(76, 55);
             this.tcpPort_2_tb.Name = "tcpPort_2_tb";
             this.tcpPort_2_tb.ReadOnly = true;
@@ -562,6 +572,7 @@ namespace NSS
             // 
             // name_2_tb
             // 
+            this.name_2_tb.Enabled = false;
             this.name_2_tb.Location = new System.Drawing.Point(76, 22);
             this.name_2_tb.Name = "name_2_tb";
             this.name_2_tb.ReadOnly = true;

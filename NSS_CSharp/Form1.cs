@@ -12,7 +12,7 @@ namespace NSS
     public partial class Form1 : Form
     {
         private Timer _refreshTimer;
-        private bool isServerMode = true;   // true = server side active, false = client side active
+        private bool isServerMode = false;   // true = server side active, false = client side active
         private bool isServerA = true;      // true = Server A, false = Server B
 
         private void InitializeRefreshTimer()
@@ -194,9 +194,11 @@ namespace NSS
             debug_2_rtb.BorderStyle = BorderStyle.FixedSingle;
         }
 
-        public Form1()
+        public Form1(bool isServerMode, bool isServerA)
         {
             InitializeComponent();
+            this.isServerMode = isServerMode;
+            this.isServerA = isServerA;
             ApplyModernTheme();
         }
 
@@ -244,20 +246,25 @@ namespace NSS
             if (isServerMode)
             {
                     InitializeServerSide();
+                    main_tc.TabPages.Remove(tabPage1);
                     serverIndication_lb.Text = "ACTIVE";
                     serverIndication_lb.ForeColor = Color.Green;
                     serverIndication_lb.Font = new Font("Segoe UI", 14F, FontStyle.Regular);
-                    clientIndication_lb.Text = "";
-                }
+                   
+                    
+
+            }
                
                 
             else
             {
                     InitializeClientSide();
-                    serverIndication_lb.Text = "";
+                    main_tc.TabPages.Remove(tabPage2);
+                    
                     clientIndication_lb.Text = "ACTIVE";
                     clientIndication_lb.ForeColor = Color.Green;
                     clientIndicatation_lb.Font = new Font("Segoe UI", 14F, FontStyle.Regular);
+                    
             }
                
 
