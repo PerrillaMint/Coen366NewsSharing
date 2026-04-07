@@ -5,15 +5,45 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
+
 namespace NSS
 {
     public partial class Form1 : Form
     {
-
+        private Timer _refreshTimer;
         private bool isServerMode = true;   // true = server side active, false = client side active
         private bool isServerA = true;      // true = Server A, false = Server B
 
+        private void InitializeRefreshTimer()
+        {
+            _refreshTimer = new Timer();
+            _refreshTimer.Interval = 2000; // 2 seconds
+            _refreshTimer.Tick += RefreshTimer_Tick;
+        }
+        private void RefreshTimer_Tick(object sender, EventArgs e)
+        {
+            if (_pythonProcess == null || _pythonProcess.HasExited)
+                return;
 
+            if (isServerMode)
+            {
+                if (!string.IsNullOrWhiteSpace(serverIp_2_tb.Text) &&
+                    !string.IsNullOrWhiteSpace(tcpPort_2_tb.Text))
+                {
+                    SendCommand($"LOADUSERS {serverIp_2_tb.Text} {tcpPort_2_tb.Text}");
+
+                    if (clients_2_cb.SelectedItem != null)
+                    {
+                        string key = clients_2_cb.SelectedItem.ToString();
+                        SendCommand($"SELECT {key}");
+                    }
+                }
+            }
+            else
+            {
+                SendCommand("INIT_CLIENT");
+            }
+        }
 
         private Process _pythonProcess;
         private bool _updatingCombo = false;
@@ -74,6 +104,7 @@ namespace NSS
         private void Form1_Load(object sender, EventArgs e)
         {
             InitializeSubjects();
+            InitializeRefreshTimer();
             StartPythonBridge();
 
 
