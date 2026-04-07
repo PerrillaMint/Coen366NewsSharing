@@ -324,7 +324,10 @@ namespace NSS
                 return;
             }
 
-            feed_2_rtb.AppendText(text + Environment.NewLine);
+            if (isServerMode)
+                feed_2_rtb.AppendText(text + Environment.NewLine);
+            else
+                feed_1_rtb.AppendText(text + Environment.NewLine);
         }
         private void SendCommand(string cmd)
         {
