@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Windows.Forms;
-
 
 namespace NSS
 {
@@ -15,12 +15,73 @@ namespace NSS
         private bool isServerMode = false;   // true = server side active, false = client side active
         private bool isServerA = true;      // true = Server A, false = Server B
 
+        private void InitializeSubjects()
+        {
+            subjects_1_clb.Items.Clear();
+
+            subjects_1_clb.Items.Add("Sports");
+            subjects_1_clb.Items.Add("Entertainment");
+            subjects_1_clb.Items.Add("Health");
+            subjects_1_clb.Items.Add("Science");
+            subjects_1_clb.Items.Add("Technology");
+            subjects_1_clb.Items.Add("Politics");
+            subjects_1_clb.Items.Add("Business");
+        }
+        private void LockClientConnectionFields()
+        {
+            name_1_tb.ReadOnly = true;
+            tcpPort_1_tb.ReadOnly = true;
+            udpPort_1_tb.ReadOnly = true;
+            serverIp_1_tb.ReadOnly = true;
+            serverTcp_1_tb.ReadOnly = true;
+
+            name_1_tb.Enabled = false;
+            tcpPort_1_tb.Enabled = false;
+            udpPort_1_tb.Enabled = false;
+            serverIp_1_tb.Enabled = false;
+            serverTcp_1_tb.Enabled = false;
+        }
+        private void UnlockClientConnectionFields()
+        {
+            name_1_tb.ReadOnly = false;
+            tcpPort_1_tb.ReadOnly = false;
+            udpPort_1_tb.ReadOnly = false;
+            serverIp_1_tb.ReadOnly = false;
+            serverTcp_1_tb.ReadOnly = false;
+
+            name_1_tb.Enabled = true;
+            tcpPort_1_tb.Enabled = true;
+            udpPort_1_tb.Enabled = true;
+            serverIp_1_tb.Enabled = true;
+            serverTcp_1_tb.Enabled = true;
+
+            ip_1_tb.ReadOnly = true;
+            ip_1_tb.Enabled = true;
+        }
+
+        private string GetLocalIPv4()
+        {
+            try
+            {
+                using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+                {
+                    socket.Connect("8.8.8.8", 80);
+                    IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                    return endPoint?.Address.ToString() ?? "127.0.0.1";
+                }
+            }
+            catch
+            {
+                return "127.0.0.1";
+            }
+        }
         private void InitializeRefreshTimer()
         {
             _refreshTimer = new Timer();
             _refreshTimer.Interval = 2000; // 2 seconds
             _refreshTimer.Tick += RefreshTimer_Tick;
         }
+
         private void RefreshTimer_Tick(object sender, EventArgs e)
         {
             if (_pythonProcess == null || _pythonProcess.HasExited)
@@ -28,20 +89,13 @@ namespace NSS
 
             if (isServerMode)
             {
-               
-                {
-                    SendCommand($"LOADUSERS {serverIp_2_tb.Text} {tcpPort_2_tb.Text}");
+                SendCommand($"LOADUSERS {serverIp_2_tb.Text} {tcpPort_2_tb.Text}");
 
-                    if (clients_2_cb.SelectedItem != null)
-                    {
-                        string key = clients_2_cb.SelectedItem.ToString();
-                        SendCommand($"SELECT {key}");
-                    }
+                if (clients_2_cb.SelectedItem != null)
+                {
+                    string key = clients_2_cb.SelectedItem.ToString();
+                    SendCommand($"SELECT {key}");
                 }
-            }
-            else
-            {
-                SendCommand("INIT_CLIENT");
             }
         }
 
@@ -234,12 +288,16 @@ namespace NSS
         }
         private void InitializeClientSide()
         {
-            string serverId = isServerA ? "A" : "B";
-            string serverIp = "192.168.0.58";   // your Linux server IP for now
+            ip_1_tb.Text = GetLocalIPv4();
 
-            SendCommand($"INIT_SERVER {serverId} {serverIp}");
+            ip_1_tb.ReadOnly = true;
+
+            UnlockClientConnectionFields();
+
+
+
         }
-       
+
 
         private void InitializeActiveSide()
         { 
@@ -281,20 +339,7 @@ namespace NSS
 
         }
 
-        private void InitializeSubjects()
-        {
-            subject_1_cb.Items.Clear();
-
-            subject_1_cb.Items.Add("Sports");
-            subject_1_cb.Items.Add("Entertainment");
-            subject_1_cb.Items.Add("Health");
-            subject_1_cb.Items.Add("Science");
-            subject_1_cb.Items.Add("Technology");
-            subject_1_cb.Items.Add("Politics");
-            subject_1_cb.Items.Add("Business");
-
-           
-        }
+       
 
         private void StartPythonBridge()
         {
@@ -351,7 +396,6 @@ namespace NSS
         {
             string[] parts = line.Split('|');
 
-            // SERVER-INIT|serverName|serverIp|tcpPort|ip|udpPort|serverTcp
             if (parts.Length < 7)
                 return;
 
@@ -373,11 +417,8 @@ namespace NSS
 
                 SendCommand($"LOADUSERS {serverIp_2_tb.Text} {tcpPort_2_tb.Text}");
             }
-            else
-            {
-                SendCommand("INIT_CLIENT");
-            }
         }
+
         private void clients_2_cb_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_updatingCombo)
@@ -462,6 +503,27 @@ namespace NSS
                 clients_2_cb.Items.Clear();
                 clients_2_cb.Text = "";
                 _updatingCombo = false;
+            }
+            else if (line == "REGISTERED")
+            {
+                AppendIncoming(line);
+                LockClientConnectionFields();
+            }
+            else if (line == "SUBJECTS-UPDATED")
+            {
+                AppendIncoming(line);
+            }
+            else if (line.StartsWith("REGISTER-DENIED|"))
+            {
+                AppendIncoming(line);
+            }
+            else if (line == "UPDATE-CONFIRMED")
+            {
+                AppendIncoming(line);
+            }
+            else if (line.StartsWith("UPDATE-DENIED|"))
+            {
+                AppendIncoming(line);
             }
             else
             {
@@ -574,7 +636,40 @@ namespace NSS
 
             base.OnFormClosing(e);
         }
+        private void register_1_bt_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(name_1_tb.Text) ||
+                string.IsNullOrWhiteSpace(ip_1_tb.Text) ||
+                string.IsNullOrWhiteSpace(tcpPort_1_tb.Text) ||
+                string.IsNullOrWhiteSpace(udpPort_1_tb.Text) ||
+                string.IsNullOrWhiteSpace(serverIp_1_tb.Text) ||
+                string.IsNullOrWhiteSpace(serverTcp_1_tb.Text))
+            {
+                MessageBox.Show("Fill all client connection fields first.");
+                return;
+            }
 
+            string cmd =
+                $"REGISTER {name_1_tb.Text} {ip_1_tb.Text} {tcpPort_1_tb.Text} {udpPort_1_tb.Text} {serverIp_1_tb.Text} {serverTcp_1_tb.Text}";
+            SendCommand(cmd);
+        }
+        private void updateSubjects_1_bt_Click(object sender, EventArgs e)
+        {
+            var selectedSubjects = subjects_1_clb.CheckedItems
+                .Cast<object>()
+                .Select(x => x.ToString())
+                .ToList();
+
+            if (selectedSubjects.Count == 0)
+            {
+                MessageBox.Show("Select at least one subject.");
+                return;
+            }
+
+            string cmd = "SUBJECTS " + string.Join(" ", selectedSubjects);
+            SendCommand(cmd);
+        }
 
     }
+
 }

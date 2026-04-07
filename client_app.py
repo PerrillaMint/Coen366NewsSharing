@@ -5,7 +5,10 @@ from protocol.codec import encode,decode_line
 from protocol import constants as C
 from server.config import load_config
 from server.persistence import Database
+from client.client import UdpClient
 
+udp_live_client = None
+tcp_live_client = None
 
 server_cfg = None
 server_db = None
@@ -62,7 +65,8 @@ async def handle_init_client(parts):
             ip = fields[2]
             tcp_port = fields[3]
             udp_port = fields[4]
-
+           
+           
             out(
                 f"CLIENT-INIT|{name}|{ip}|{tcp_port}|{udp_port}|"
                 f"{server_ip}|{server_port}"
@@ -148,7 +152,7 @@ def get_active_client():
 
 
 async def handle_register(parts):
-    global active_client_key
+    global active_client_key, udp_live_client, tcp_live_client
 
     if len(parts) < 7:
         out("ERROR|Invalid REGISTER format")
@@ -179,15 +183,26 @@ async def handle_register(parts):
         out("ERROR|TCP connect failed")
         return
 
+    # start UDP listener for the UI-owned client
+    if udp_live_client is None:
+        udp_live_client = UdpClient(name, 0, True, [])
+        udp_live_client.client_ip = ip
+        udp_live_client.server_ip = server_ip
+        udp_live_client.server_port = 20000
+        udp_live_client.udp_port = udp_port
+
+        await udp_live_client.start_listener()
+        out(f"UDP-LISTENER-STARTED|{ip}|{udp_port}")
+
     await client.register()
 
     clients[key] = client
+    tcp_live_client = client
     active_client_key = key
 
     out(f"CLIENT-ADDED|{key}")
     out(f"CLIENT-SELECTED|{key}")
     out(serialize_client(client))
-
 
 async def handle_select(parts):
     global active_client_key, server_db, server_cfg
@@ -237,7 +252,7 @@ async def handle_update(parts):
     client.tcp_port = int(parts[2])
     client.udp_port = int(parts[3])
     client.server_port = int(parts[4])
-
+    
     ok = await ensure_connected(client)
     if not ok:
         out("ERROR|Reconnect failed")
@@ -272,7 +287,7 @@ async def handle_subjects(parts):
 
 
 async def handle_deregister():
-    global active_client_key
+    global active_client_key, udp_live_client
 
     client = get_active_client()
     if client is None:
@@ -298,6 +313,10 @@ async def handle_deregister():
         del clients[current_key]
 
     out(f"CLIENT-REMOVED|{current_key}")
+
+    if udp_live_client is not None:
+        await udp_live_client.close_listener()
+        udp_live_client = None
 
     if clients:
         active_client_key = next(iter(clients))
@@ -364,6 +383,9 @@ async def main():
                         await client.close()
                     except Exception:
                         pass
+
+                if udp_live_client is not None:
+                    await udp_live_client.close_listener()
                 out("BYE")
                 break
             elif cmd == "LOADUSERS":

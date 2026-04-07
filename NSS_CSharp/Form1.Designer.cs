@@ -33,8 +33,17 @@ namespace NSS
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.main_tc = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.updateSubjects_1_bt = new System.Windows.Forms.Button();
+            this.subjects_1_clb = new System.Windows.Forms.CheckedListBox();
+            this.subjects_1_lb = new System.Windows.Forms.Label();
+            this.clientIndicatation_lb = new System.Windows.Forms.Label();
+            this.clientIndication_lb = new System.Windows.Forms.Label();
             this.title_lb = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.update_1_bt = new System.Windows.Forms.Button();
+            this.deRegister_1_bt = new System.Windows.Forms.Button();
+            this.register_1_bt = new System.Windows.Forms.Button();
             this.serverTcp_1_tb = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.serverIp_1_tb = new System.Windows.Forms.TextBox();
@@ -61,6 +70,7 @@ namespace NSS
             this.label2 = new System.Windows.Forms.Label();
             this.comment_1_tb = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.serverIndication_lb = new System.Windows.Forms.Label();
             this.clients_2_cb = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.debug_2_rtb = new System.Windows.Forms.RichTextBox();
@@ -81,11 +91,9 @@ namespace NSS
             this.name_2_tb = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.title2_lb = new System.Windows.Forms.Label();
-            this.clientIndication_lb = new System.Windows.Forms.Label();
-            this.clientIndicatation_lb = new System.Windows.Forms.Label();
-            this.serverIndication_lb = new System.Windows.Forms.Label();
             this.main_tc.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -106,6 +114,7 @@ namespace NSS
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Controls.Add(this.clientIndicatation_lb);
             this.tabPage1.Controls.Add(this.clientIndication_lb);
             this.tabPage1.Controls.Add(this.title_lb);
@@ -120,6 +129,64 @@ namespace NSS
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.updateSubjects_1_bt);
+            this.groupBox2.Controls.Add(this.subjects_1_clb);
+            this.groupBox2.Controls.Add(this.subjects_1_lb);
+            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox2.Location = new System.Drawing.Point(8, 207);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(625, 134);
+            this.groupBox2.TabIndex = 9;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Publish News";
+            // 
+            // updateSubjects_1_bt
+            // 
+            this.updateSubjects_1_bt.Location = new System.Drawing.Point(416, 50);
+            this.updateSubjects_1_bt.Name = "updateSubjects_1_bt";
+            this.updateSubjects_1_bt.Size = new System.Drawing.Size(86, 30);
+            this.updateSubjects_1_bt.TabIndex = 16;
+            this.updateSubjects_1_bt.Text = "Update";
+            this.updateSubjects_1_bt.UseVisualStyleBackColor = true;
+            this.updateSubjects_1_bt.Click += new System.EventHandler(this.updateSubjects_1_bt_Click);
+            // 
+            // subjects_1_clb
+            // 
+            this.subjects_1_clb.FormattingEnabled = true;
+            this.subjects_1_clb.Location = new System.Drawing.Point(78, 26);
+            this.subjects_1_clb.Name = "subjects_1_clb";
+            this.subjects_1_clb.Size = new System.Drawing.Size(278, 89);
+            this.subjects_1_clb.TabIndex = 15;
+            // 
+            // subjects_1_lb
+            // 
+            this.subjects_1_lb.AutoSize = true;
+            this.subjects_1_lb.Location = new System.Drawing.Point(15, 26);
+            this.subjects_1_lb.Name = "subjects_1_lb";
+            this.subjects_1_lb.Size = new System.Drawing.Size(55, 16);
+            this.subjects_1_lb.TabIndex = 1;
+            this.subjects_1_lb.Text = "Subject:";
+            // 
+            // clientIndicatation_lb
+            // 
+            this.clientIndicatation_lb.AutoSize = true;
+            this.clientIndicatation_lb.Location = new System.Drawing.Point(424, 8);
+            this.clientIndicatation_lb.Name = "clientIndicatation_lb";
+            this.clientIndicatation_lb.Size = new System.Drawing.Size(0, 13);
+            this.clientIndicatation_lb.TabIndex = 8;
+            // 
+            // clientIndication_lb
+            // 
+            this.clientIndication_lb.AutoSize = true;
+            this.clientIndication_lb.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.clientIndication_lb.Location = new System.Drawing.Point(449, 15);
+            this.clientIndication_lb.Name = "clientIndication_lb";
+            this.clientIndication_lb.Size = new System.Drawing.Size(61, 24);
+            this.clientIndication_lb.TabIndex = 7;
+            this.clientIndication_lb.Text = "Active";
+            // 
             // title_lb
             // 
             this.title_lb.AutoSize = true;
@@ -132,6 +199,9 @@ namespace NSS
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.update_1_bt);
+            this.groupBox7.Controls.Add(this.deRegister_1_bt);
+            this.groupBox7.Controls.Add(this.register_1_bt);
             this.groupBox7.Controls.Add(this.serverTcp_1_tb);
             this.groupBox7.Controls.Add(this.label10);
             this.groupBox7.Controls.Add(this.serverIp_1_tb);
@@ -152,12 +222,38 @@ namespace NSS
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "User Info / Connection";
             // 
+            // update_1_bt
+            // 
+            this.update_1_bt.Location = new System.Drawing.Point(514, 74);
+            this.update_1_bt.Name = "update_1_bt";
+            this.update_1_bt.Size = new System.Drawing.Size(86, 30);
+            this.update_1_bt.TabIndex = 15;
+            this.update_1_bt.Text = "Update";
+            this.update_1_bt.UseVisualStyleBackColor = true;
+            // 
+            // deRegister_1_bt
+            // 
+            this.deRegister_1_bt.Location = new System.Drawing.Point(393, 74);
+            this.deRegister_1_bt.Name = "deRegister_1_bt";
+            this.deRegister_1_bt.Size = new System.Drawing.Size(92, 30);
+            this.deRegister_1_bt.TabIndex = 14;
+            this.deRegister_1_bt.Text = "De-Register";
+            this.deRegister_1_bt.UseVisualStyleBackColor = true;
+            // 
+            // register_1_bt
+            // 
+            this.register_1_bt.Location = new System.Drawing.Point(448, 27);
+            this.register_1_bt.Name = "register_1_bt";
+            this.register_1_bt.Size = new System.Drawing.Size(86, 30);
+            this.register_1_bt.TabIndex = 13;
+            this.register_1_bt.Text = "Register";
+            this.register_1_bt.UseVisualStyleBackColor = true;
+            this.register_1_bt.Click += new System.EventHandler(this.register_1_bt_Click);
+            // 
             // serverTcp_1_tb
             // 
-            this.serverTcp_1_tb.Enabled = false;
             this.serverTcp_1_tb.Location = new System.Drawing.Point(265, 88);
             this.serverTcp_1_tb.Name = "serverTcp_1_tb";
-            this.serverTcp_1_tb.ReadOnly = true;
             this.serverTcp_1_tb.Size = new System.Drawing.Size(94, 22);
             this.serverTcp_1_tb.TabIndex = 11;
             // 
@@ -172,10 +268,8 @@ namespace NSS
             // 
             // serverIp_1_tb
             // 
-            this.serverIp_1_tb.Enabled = false;
             this.serverIp_1_tb.Location = new System.Drawing.Point(76, 85);
             this.serverIp_1_tb.Name = "serverIp_1_tb";
-            this.serverIp_1_tb.ReadOnly = true;
             this.serverIp_1_tb.Size = new System.Drawing.Size(94, 22);
             this.serverIp_1_tb.TabIndex = 9;
             // 
@@ -190,10 +284,8 @@ namespace NSS
             // 
             // udpPort_1_tb
             // 
-            this.udpPort_1_tb.Enabled = false;
             this.udpPort_1_tb.Location = new System.Drawing.Point(265, 55);
             this.udpPort_1_tb.Name = "udpPort_1_tb";
-            this.udpPort_1_tb.ReadOnly = true;
             this.udpPort_1_tb.Size = new System.Drawing.Size(94, 22);
             this.udpPort_1_tb.TabIndex = 7;
             // 
@@ -208,10 +300,8 @@ namespace NSS
             // 
             // tcpPort_1_tb
             // 
-            this.tcpPort_1_tb.Enabled = false;
             this.tcpPort_1_tb.Location = new System.Drawing.Point(76, 55);
             this.tcpPort_1_tb.Name = "tcpPort_1_tb";
-            this.tcpPort_1_tb.ReadOnly = true;
             this.tcpPort_1_tb.Size = new System.Drawing.Size(94, 22);
             this.tcpPort_1_tb.TabIndex = 5;
             // 
@@ -244,10 +334,8 @@ namespace NSS
             // 
             // name_1_tb
             // 
-            this.name_1_tb.Enabled = false;
             this.name_1_tb.Location = new System.Drawing.Point(76, 27);
             this.name_1_tb.Name = "name_1_tb";
-            this.name_1_tb.ReadOnly = true;
             this.name_1_tb.Size = new System.Drawing.Size(94, 22);
             this.name_1_tb.TabIndex = 1;
             // 
@@ -270,7 +358,7 @@ namespace NSS
             this.groupBox5.Controls.Add(this.label5);
             this.groupBox5.Controls.Add(this.subject_1_cb);
             this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox5.Location = new System.Drawing.Point(3, 225);
+            this.groupBox5.Location = new System.Drawing.Point(8, 346);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(625, 134);
             this.groupBox5.TabIndex = 3;
@@ -343,9 +431,9 @@ namespace NSS
             this.groupBox4.Controls.Add(this.label2);
             this.groupBox4.Controls.Add(this.comment_1_tb);
             this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox4.Location = new System.Drawing.Point(3, 384);
+            this.groupBox4.Location = new System.Drawing.Point(5, 486);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(625, 255);
+            this.groupBox4.Size = new System.Drawing.Size(625, 153);
             this.groupBox4.TabIndex = 2;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Incoming Feed / Messages";
@@ -354,13 +442,13 @@ namespace NSS
             // 
             this.feed_1_rtb.Location = new System.Drawing.Point(3, 18);
             this.feed_1_rtb.Name = "feed_1_rtb";
-            this.feed_1_rtb.Size = new System.Drawing.Size(616, 162);
+            this.feed_1_rtb.Size = new System.Drawing.Size(616, 91);
             this.feed_1_rtb.TabIndex = 16;
             this.feed_1_rtb.Text = "";
             // 
             // comment_1_bt
             // 
-            this.comment_1_bt.Location = new System.Drawing.Point(526, 186);
+            this.comment_1_bt.Location = new System.Drawing.Point(526, 112);
             this.comment_1_bt.Name = "comment_1_bt";
             this.comment_1_bt.Size = new System.Drawing.Size(93, 26);
             this.comment_1_bt.TabIndex = 15;
@@ -370,7 +458,7 @@ namespace NSS
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 191);
+            this.label2.Location = new System.Drawing.Point(6, 112);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(67, 16);
             this.label2.TabIndex = 8;
@@ -378,7 +466,7 @@ namespace NSS
             // 
             // comment_1_tb
             // 
-            this.comment_1_tb.Location = new System.Drawing.Point(79, 188);
+            this.comment_1_tb.Location = new System.Drawing.Point(79, 112);
             this.comment_1_tb.Multiline = true;
             this.comment_1_tb.Name = "comment_1_tb";
             this.comment_1_tb.Size = new System.Drawing.Size(437, 24);
@@ -398,6 +486,16 @@ namespace NSS
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // serverIndication_lb
+            // 
+            this.serverIndication_lb.AutoSize = true;
+            this.serverIndication_lb.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.serverIndication_lb.Location = new System.Drawing.Point(516, 16);
+            this.serverIndication_lb.Name = "serverIndication_lb";
+            this.serverIndication_lb.Size = new System.Drawing.Size(61, 24);
+            this.serverIndication_lb.TabIndex = 12;
+            this.serverIndication_lb.Text = "Active";
             // 
             // clients_2_cb
             // 
@@ -598,34 +696,6 @@ namespace NSS
             this.title2_lb.TabIndex = 7;
             this.title2_lb.Text = "Server";
             // 
-            // clientIndication_lb
-            // 
-            this.clientIndication_lb.AutoSize = true;
-            this.clientIndication_lb.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.clientIndication_lb.Location = new System.Drawing.Point(449, 15);
-            this.clientIndication_lb.Name = "clientIndication_lb";
-            this.clientIndication_lb.Size = new System.Drawing.Size(61, 24);
-            this.clientIndication_lb.TabIndex = 7;
-            this.clientIndication_lb.Text = "Active";
-            // 
-            // clientIndicatation_lb
-            // 
-            this.clientIndicatation_lb.AutoSize = true;
-            this.clientIndicatation_lb.Location = new System.Drawing.Point(424, 8);
-            this.clientIndicatation_lb.Name = "clientIndicatation_lb";
-            this.clientIndicatation_lb.Size = new System.Drawing.Size(0, 13);
-            this.clientIndicatation_lb.TabIndex = 8;
-            // 
-            // serverIndication_lb
-            // 
-            this.serverIndication_lb.AutoSize = true;
-            this.serverIndication_lb.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.serverIndication_lb.Location = new System.Drawing.Point(516, 16);
-            this.serverIndication_lb.Name = "serverIndication_lb";
-            this.serverIndication_lb.Size = new System.Drawing.Size(61, 24);
-            this.serverIndication_lb.TabIndex = 12;
-            this.serverIndication_lb.Text = "Active";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -638,6 +708,8 @@ namespace NSS
             this.main_tc.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.groupBox5.ResumeLayout(false);
@@ -733,6 +805,13 @@ namespace NSS
         private System.Windows.Forms.Label clientIndicatation_lb;
         private System.Windows.Forms.Label clientIndication_lb;
         private System.Windows.Forms.Label serverIndication_lb;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckedListBox subjects_1_clb;
+        private System.Windows.Forms.Label subjects_1_lb;
+        private System.Windows.Forms.Button update_1_bt;
+        private System.Windows.Forms.Button deRegister_1_bt;
+        private System.Windows.Forms.Button register_1_bt;
+        private System.Windows.Forms.Button updateSubjects_1_bt;
     }
 }
 
