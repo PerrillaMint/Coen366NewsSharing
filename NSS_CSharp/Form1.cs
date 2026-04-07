@@ -76,12 +76,14 @@ namespace NSS
 
         private void StartPythonBridge()
         {
+
             try
             {
                 string pythonExe = @"C:\Users\blue\AppData\Local\Microsoft\WindowsApps\python.exe";
                 string scriptPath = Path.Combine(Application.StartupPath, @"C:\Users\blue\Desktop\Coen366NewsSharing\client_app.py");
 
                 var psi = new ProcessStartInfo
+
                 {
                     FileName = pythonExe,
                     Arguments = $"\"{scriptPath}\"",
@@ -91,6 +93,7 @@ namespace NSS
                     RedirectStandardError = true,
                     CreateNoWindow = true
                 };
+                psi.EnvironmentVariables["PEER_IP"] = "127.0.0.1";
 
                 _pythonProcess = new Process();
                 _pythonProcess.StartInfo = psi;
