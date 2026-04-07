@@ -3,9 +3,31 @@ import asyncio
 from client.client import TcpClient
 from protocol.codec import encode, decode_line
 from protocol import constants as C
+from server.config import load_config
 
 clients = {}
 active_client_key = None
+async def handle_init_server(parts):
+    if len(parts) < 2:
+        out("ERROR|Invalid INIT_SERVER format")
+        return
+
+    server_id = parts[1].upper()
+
+    try:
+        cfg = await load_config(server_id)
+
+        server_name = cfg["server_name"]
+        server_ip = cfg["host"]
+        tcp_port = cfg["tcp_port"]
+        udp_port = cfg["udp_port"]
+
+        # For now:
+        # IP = same as server IP
+        # Server TCP = blank
+        out(f"SERVER-INIT|{server_name}|{server_ip}|{tcp_port}|{server_ip}|{udp_port}|")
+    except Exception as e:
+        out(f"ERROR|INIT_SERVER failed: {e}")
 
 async def request_users_from_server(server_ip: str, server_port: int):
     reader = None
@@ -301,6 +323,9 @@ async def main():
 
             if cmd == "PING":
                 out("PONG")
+                
+            elif cmd == "INIT_SERVER":
+                await handle_init_server(parts)
 
             elif cmd == "REGISTER":
                 await handle_register(parts)

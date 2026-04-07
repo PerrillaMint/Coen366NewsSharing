@@ -34,7 +34,7 @@ class Ctx:
 
 
 async def main():
-    cfg = load_config()
+    cfg = await load_config()
     ctx = Ctx(cfg)
 
     ctx.log.info(f"Starting Server {ctx.server_name}")

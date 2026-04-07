@@ -9,21 +9,43 @@ namespace NSS
 {
     public partial class Form1 : Form
     {
+
+        private bool isServerMode = true;   // true = server side active, false = client side active
+        private bool isServerA = true;      // true = Server A, false = Server B
+
+
+
         private Process _pythonProcess;
         private bool _updatingCombo = false;
-        private bool _pythonReady = false;
-
+       
 
         public Form1()
         {
             InitializeComponent();
         }
 
+        private void InitializeServerSide()
+        {
+            string serverId = isServerA ? "A" : "B";
+            SendCommand($"INIT_SERVER {serverId}");
+        }
+        private void InitializeClientSide()
+        {
+            // Leave empty for now
+            // We will add client-side init next
+        }
+
+        private void InitializeActiveSide()
+        {
+            if (isServerMode)
+                InitializeServerSide();
+            else
+                InitializeClientSide();
+        }
+       
         private void Form1_Load(object sender, EventArgs e)
         {
             InitializeSubjects();
-            server_1_tb.Text = "127.0.0.1";
-            servertcp_1_tb.Text = "10000";
             StartPythonBridge();
 
 
@@ -31,15 +53,25 @@ namespace NSS
 
         private void InitializeSubjects()
         {
-            subjects_2_clb.Items.Clear();
+            subject_1_cb.Items.Clear();
 
-            subjects_2_clb.Items.Add("Sports");
-            subjects_2_clb.Items.Add("Entertainment");
-            subjects_2_clb.Items.Add("Health");
-            subjects_2_clb.Items.Add("Science");
-            subjects_2_clb.Items.Add("Technology");
-            subjects_2_clb.Items.Add("Politics");
-            subjects_2_clb.Items.Add("Business");
+            subject_1_cb.Items.Add("Sports");
+            subject_1_cb.Items.Add("Entertainment");
+            subject_1_cb.Items.Add("Health");
+            subject_1_cb.Items.Add("Science");
+            subject_1_cb.Items.Add("Technology");
+            subject_1_cb.Items.Add("Politics");
+            subject_1_cb.Items.Add("Business");
+
+            subject_2_cb.Items.Clear();
+
+            subject_2_cb.Items.Add("Sports");
+            subject_2_cb.Items.Add("Entertainment");
+            subject_2_cb.Items.Add("Health");
+            subject_2_cb.Items.Add("Science");
+            subject_2_cb.Items.Add("Technology");
+            subject_2_cb.Items.Add("Politics");
+            subject_2_cb.Items.Add("Business");
         }
 
         private void StartPythonBridge()
@@ -90,6 +122,44 @@ namespace NSS
 
             AppendIncoming("[PY-ERR] " + e.Data);
         }
+        private void ApplyServerInit(string line)
+        {
+            string[] parts = line.Split('|');
+
+            // SERVER-INIT|serverName|serverIp|tcpPort|ip|udpPort|serverTcp
+            if (parts.Length < 7)
+                return;
+
+            if (isServerMode)
+            {
+                name_2_tb.Text = parts[1];
+                serverIp_2_tb.Text = parts[2];
+                tcpPort_2_tb.Text = parts[3];
+                ip_2_tb.Text = parts[4];
+                udpPort_2_tb.Text = parts[5];
+                serverTcp_2_tb.Text = parts[6];
+
+                name_2_tb.ReadOnly = true;
+                serverIp_2_tb.ReadOnly = true;
+                tcpPort_2_tb.ReadOnly = true;
+                ip_2_tb.ReadOnly = true;
+                udpPort_2_tb.ReadOnly = true;
+                serverTcp_2_tb.ReadOnly = true;
+
+                SendCommand($"LOADUSERS {serverIp_2_tb.Text} {tcpPort_2_tb.Text}");
+            }
+        }
+        private void clients_2_cb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_updatingCombo)
+                return;
+
+            if (clients_2_cb.SelectedItem == null)
+                return;
+
+            string key = clients_2_cb.SelectedItem.ToString();
+            SendCommand($"SELECT {key}");
+        }
 
         private void HandlePythonLine(string line)
         {
@@ -98,23 +168,26 @@ namespace NSS
                 BeginInvoke(new Action(() => HandlePythonLine(line)));
                 return;
             }
+
             if (line == "PYTHON CLIENT READY")
             {
-                _pythonReady = true;
+              
                 AppendIncoming(line);
-
-                SendCommand($"LOADUSERS {server_1_tb.Text} {servertcp_1_tb.Text}");
+                InitializeActiveSide();
                 return;
             }
-
-            if (line.StartsWith("CLIENT-ADDED|"))
+            else if (line.StartsWith("SERVER-INIT|"))
+            {
+                ApplyServerInit(line);
+            }
+            else if (line.StartsWith("CLIENT-ADDED|"))
             {
                 string key = line.Split('|')[1];
 
                 _updatingCombo = true;
-                if (!clients_1_cb.Items.Contains(key))
-                    clients_1_cb.Items.Add(key);
-                clients_1_cb.SelectedItem = key;
+                if (!clients_2_cb.Items.Contains(key))
+                    clients_2_cb.Items.Add(key);
+                clients_2_cb.SelectedItem = key;
                 _updatingCombo = false;
             }
             else if (line.StartsWith("CLIENT-REMOVED|"))
@@ -122,12 +195,12 @@ namespace NSS
                 string key = line.Split('|')[1];
 
                 _updatingCombo = true;
-                clients_1_cb.Items.Remove(key);
+                clients_2_cb.Items.Remove(key);
 
-                if (clients_1_cb.Items.Count > 0)
-                    clients_1_cb.SelectedIndex = 0;
+                if (clients_2_cb.Items.Count > 0)
+                    clients_2_cb.SelectedIndex = 0;
                 else
-                    clients_1_cb.Text = "";
+                    clients_2_cb.Text = "";
 
                 _updatingCombo = false;
             }
@@ -136,8 +209,8 @@ namespace NSS
                 string key = line.Split('|')[1];
 
                 _updatingCombo = true;
-                if (clients_1_cb.Items.Contains(key))
-                    clients_1_cb.SelectedItem = key;
+                if (clients_2_cb.Items.Contains(key))
+                    clients_2_cb.SelectedItem = key;
                 _updatingCombo = false;
             }
             else if (line.StartsWith("CLIENT-LIST|"))
@@ -153,8 +226,8 @@ namespace NSS
                 ClearClientFields();
 
                 _updatingCombo = true;
-                clients_1_cb.Items.Clear();
-                clients_1_cb.Text = "";
+                clients_2_cb.Items.Clear();
+                clients_2_cb.Text = "";
                 _updatingCombo = false;
             }
             else
@@ -169,15 +242,15 @@ namespace NSS
             string csv = parts.Length > 1 ? parts[1] : "";
 
             _updatingCombo = true;
-            clients_1_cb.Items.Clear();
+            clients_2_cb.Items.Clear();
 
             if (!string.IsNullOrWhiteSpace(csv))
             {
                 foreach (string item in csv.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                    clients_1_cb.Items.Add(item);
+                    clients_2_cb.Items.Add(item);
 
-                if (clients_1_cb.Items.Count > 0)
-                    clients_1_cb.SelectedIndex = 0;
+                if (clients_2_cb.Items.Count > 0)
+                    clients_2_cb.SelectedIndex = 0;
             }
 
             _updatingCombo = false;
@@ -191,37 +264,31 @@ namespace NSS
             if (parts.Length < 9)
                 return;
 
-            name_1_tb.Text = parts[1];
-            ip_1_tb.Text = parts[2];
-            tcp_1_tb.Text = parts[3];
-            udp_1_tb.Text = parts[4];
-            server_1_tb.Text = parts[5];
-            servertcp_1_tb.Text = parts[6];
+            name_2_tb.Text = parts[1];
+            ip_2_tb.Text = parts[2];
+            tcpPort_2_tb.Text = parts[3];
+            udpPort_2_tb.Text = parts[4];
+            serverIp_2_tb.Text = parts[5];
+            serverTcp_2_tb.Text = parts[6];
 
             string subjectsCsv = parts[8];
+            string[] subjects = subjectsCsv.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var selectedSubjects = new HashSet<string>(
-                subjectsCsv.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-            );
-
-            for (int i = 0; i < subjects_2_clb.Items.Count; i++)
-            {
-                string subject = subjects_2_clb.Items[i].ToString();
-                subjects_2_clb.SetItemChecked(i, selectedSubjects.Contains(subject));
-            }
+            if (subjects.Length > 0)
+                subject_2_cb.SelectedItem = subjects[0];
+            else
+                subject_2_cb.SelectedIndex = -1;
         }
 
         private void ClearClientFields()
         {
-            name_1_tb.Text = "";
-            ip_1_tb.Text = "";
-            tcp_1_tb.Text = "";
-            udp_1_tb.Text = "";
-            server_1_tb.Text = "";
-            servertcp_1_tb.Text = "";
-
-            for (int i = 0; i < subjects_2_clb.Items.Count; i++)
-                subjects_2_clb.SetItemChecked(i, false);
+            name_2_tb.Text = "";
+            ip_2_tb.Text = "";
+            tcpPort_2_tb.Text = "";
+            udpPort_2_tb.Text = "";
+            serverIp_2_tb.Text = "";
+            serverTcp_2_tb.Text = "";
+            subject_2_cb.SelectedIndex = -1;
         }
 
         private void AppendIncoming(string text)
@@ -232,7 +299,7 @@ namespace NSS
                 return;
             }
 
-            incoming_3_ltb.AppendText(text + Environment.NewLine);
+            feed_2_rtb.AppendText(text + Environment.NewLine);
         }
         private void SendCommand(string cmd)
         {
@@ -254,72 +321,6 @@ namespace NSS
             }
         }
 
-        private void register_1_bt_Click(object sender, EventArgs e)
-        {
-            string cmd =
-                $"REGISTER {name_1_tb.Text} {ip_1_tb.Text} {tcp_1_tb.Text} {udp_1_tb.Text} {server_1_tb.Text} {servertcp_1_tb.Text}";
-            SendCommand(cmd);
-        }
-
-        private void update_1_bt_Click(object sender, EventArgs e)
-        {
-            string cmd =
-                $"UPDATE {ip_1_tb.Text} {tcp_1_tb.Text} {udp_1_tb.Text} {servertcp_1_tb.Text}";
-            SendCommand(cmd);
-        }
-
-        private void deregister_1_bt_Click(object sender, EventArgs e)
-        {
-            SendCommand("DEREGISTER");
-        }
-
-        private void updatesubjects_2_bt_Click(object sender, EventArgs e)
-        {
-            var selected = subjects_2_clb.CheckedItems
-                .Cast<object>()
-                .Select(x => x.ToString())
-                .ToList();
-
-            if (selected.Count == 0)
-            {
-                MessageBox.Show("Select at least one subject.");
-                return;
-            }
-
-            string cmd = "SUBJECTS " + string.Join(" ", selected);
-            SendCommand(cmd);
-        }
-
-        private void clients_1_cb_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (_updatingCombo)
-                return;
-
-            if (clients_1_cb.SelectedItem == null)
-                return;
-
-            string key = clients_1_cb.SelectedItem.ToString();
-            SendCommand($"SELECT {key}");
-        }
-
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            try
-            {
-                if (_pythonProcess != null && !_pythonProcess.HasExited)
-                {
-                    _pythonProcess.StandardInput.WriteLine("EXIT");
-                    _pythonProcess.StandardInput.Flush();
-
-                    if (!_pythonProcess.WaitForExit(1000))
-                        _pythonProcess.Kill();
-                }
-            }
-            catch
-            {
-            }
-
-            base.OnFormClosing(e);
-        }
+ 
     }
 }
