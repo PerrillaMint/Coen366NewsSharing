@@ -63,7 +63,7 @@ namespace NSS
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.clients_2_cb = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.feed_2_rtb = new System.Windows.Forms.RichTextBox();
+            this.debug_2_rtb = new System.Windows.Forms.RichTextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.update_2_bt = new System.Windows.Forms.Button();
             this.deRegister_2_bt = new System.Windows.Forms.Button();
@@ -81,6 +81,9 @@ namespace NSS
             this.name_2_tb = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.title2_lb = new System.Windows.Forms.Label();
+            this.clientIndication_lb = new System.Windows.Forms.Label();
+            this.clientIndicatation_lb = new System.Windows.Forms.Label();
+            this.serverIndication_lb = new System.Windows.Forms.Label();
             this.main_tc.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -103,6 +106,8 @@ namespace NSS
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.clientIndicatation_lb);
+            this.tabPage1.Controls.Add(this.clientIndication_lb);
             this.tabPage1.Controls.Add(this.title_lb);
             this.tabPage1.Controls.Add(this.groupBox7);
             this.tabPage1.Controls.Add(this.groupBox5);
@@ -375,6 +380,7 @@ namespace NSS
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.serverIndication_lb);
             this.tabPage2.Controls.Add(this.clients_2_cb);
             this.tabPage2.Controls.Add(this.groupBox3);
             this.tabPage2.Controls.Add(this.groupBox1);
@@ -399,22 +405,22 @@ namespace NSS
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.feed_2_rtb);
+            this.groupBox3.Controls.Add(this.debug_2_rtb);
             this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox3.Location = new System.Drawing.Point(3, 375);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(625, 183);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Incoming Feed / Messages";
+            this.groupBox3.Text = "Debug / Server Communication";
             // 
-            // feed_2_rtb
+            // debug_2_rtb
             // 
-            this.feed_2_rtb.Location = new System.Drawing.Point(3, 18);
-            this.feed_2_rtb.Name = "feed_2_rtb";
-            this.feed_2_rtb.Size = new System.Drawing.Size(616, 159);
-            this.feed_2_rtb.TabIndex = 16;
-            this.feed_2_rtb.Text = "";
+            this.debug_2_rtb.Location = new System.Drawing.Point(3, 18);
+            this.debug_2_rtb.Name = "debug_2_rtb";
+            this.debug_2_rtb.Size = new System.Drawing.Size(616, 159);
+            this.debug_2_rtb.TabIndex = 16;
+            this.debug_2_rtb.Text = "";
             // 
             // groupBox1
             // 
@@ -581,6 +587,34 @@ namespace NSS
             this.title2_lb.TabIndex = 7;
             this.title2_lb.Text = "Server";
             // 
+            // clientIndication_lb
+            // 
+            this.clientIndication_lb.AutoSize = true;
+            this.clientIndication_lb.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.clientIndication_lb.Location = new System.Drawing.Point(449, 15);
+            this.clientIndication_lb.Name = "clientIndication_lb";
+            this.clientIndication_lb.Size = new System.Drawing.Size(61, 24);
+            this.clientIndication_lb.TabIndex = 7;
+            this.clientIndication_lb.Text = "Active";
+            // 
+            // clientIndicatation_lb
+            // 
+            this.clientIndicatation_lb.AutoSize = true;
+            this.clientIndicatation_lb.Location = new System.Drawing.Point(424, 8);
+            this.clientIndicatation_lb.Name = "clientIndicatation_lb";
+            this.clientIndicatation_lb.Size = new System.Drawing.Size(0, 13);
+            this.clientIndicatation_lb.TabIndex = 8;
+            // 
+            // serverIndication_lb
+            // 
+            this.serverIndication_lb.AutoSize = true;
+            this.serverIndication_lb.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.serverIndication_lb.Location = new System.Drawing.Point(516, 16);
+            this.serverIndication_lb.Name = "serverIndication_lb";
+            this.serverIndication_lb.Size = new System.Drawing.Size(61, 24);
+            this.serverIndication_lb.TabIndex = 12;
+            this.serverIndication_lb.Text = "Active";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -683,8 +717,11 @@ namespace NSS
         private System.Windows.Forms.TextBox name_2_tb;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.RichTextBox feed_2_rtb;
+        private System.Windows.Forms.RichTextBox debug_2_rtb;
         private System.Windows.Forms.ComboBox clients_2_cb;
+        private System.Windows.Forms.Label clientIndicatation_lb;
+        private System.Windows.Forms.Label clientIndication_lb;
+        private System.Windows.Forms.Label serverIndication_lb;
     }
 }
 

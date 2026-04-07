@@ -187,11 +187,11 @@ namespace NSS
             feed_1_rtb.Font = new Font("Consolas", 10F, FontStyle.Regular);
             feed_1_rtb.BorderStyle = BorderStyle.FixedSingle;
 
-            feed_2_rtb.ReadOnly = true;
-            feed_2_rtb.BackColor = logBg;
-            feed_2_rtb.ForeColor = Color.FromArgb(30, 30, 30);
-            feed_2_rtb.Font = new Font("Consolas", 10F, FontStyle.Regular);
-            feed_2_rtb.BorderStyle = BorderStyle.FixedSingle;
+            debug_2_rtb.ReadOnly = true;
+            debug_2_rtb.BackColor = logBg;
+            debug_2_rtb.ForeColor = Color.FromArgb(30, 30, 30);
+            debug_2_rtb.Font = new Font("Consolas", 10F, FontStyle.Regular);
+            debug_2_rtb.BorderStyle = BorderStyle.FixedSingle;
         }
 
         public Form1()
@@ -240,11 +240,26 @@ namespace NSS
        
 
         private void InitializeActiveSide()
-        {
+        { 
             if (isServerMode)
-                InitializeServerSide();
+            {
+                    InitializeServerSide();
+                    serverIndication_lb.Text = "ACTIVE";
+                    serverIndication_lb.ForeColor = Color.Green;
+                    serverIndication_lb.Font = new Font("Segoe UI", 14F, FontStyle.Regular);
+                    clientIndication_lb.Text = "";
+                }
+               
+                
             else
-                InitializeClientSide();
+            {
+                    InitializeClientSide();
+                    serverIndication_lb.Text = "";
+                    clientIndication_lb.Text = "ACTIVE";
+                    clientIndication_lb.ForeColor = Color.Green;
+                    clientIndicatation_lb.Font = new Font("Segoe UI", 14F, FontStyle.Regular);
+            }
+               
 
             if (_refreshTimer != null && !_refreshTimer.Enabled)
                 _refreshTimer.Start();
@@ -507,7 +522,7 @@ namespace NSS
             }
 
             if (isServerMode)
-                feed_2_rtb.AppendText(text + Environment.NewLine);
+                debug_2_rtb.AppendText(text + Environment.NewLine);
             else
                 feed_1_rtb.AppendText(text + Environment.NewLine);
         }
