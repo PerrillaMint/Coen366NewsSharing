@@ -206,29 +206,42 @@ class TcpClient(BaseClient):
     async def handle_subjects_rejected(self, fields):
         ui("SUBJECTS-REJECTED")
 
+class ClientUDPProtocol(asyncio.DatagramProtocol):
+    def __init__(self, client):
+        self.client = client
+
+    def datagram_received(self, data, addr):
+        asyncio.create_task(self.client.handle_datagram(data, addr))
 
 class UdpClient(BaseClient):
 
     def __init__(self, name, rq_counter=0, is_registered=False, subjects=None):
         super().__init__(name, rq_counter, is_registered, subjects)
+        self.transport = None
 
-    async def send_message(self, message: str):
+    async def start_listener(self):
         loop = asyncio.get_running_loop()
-        transport = None
-        try:
-            transport, _ = await loop.create_datagram_endpoint(
-                lambda: asyncio.DatagramProtocol(),
-                remote_addr=(self.server_ip, self.server_port)
-            )
 
-            self.udp_port = transport.get_extra_info("sockname")[1]
-            transport.sendto(message.encode())
+        if not self.client_ip or self.client_ip == "127.0.0.1":
+            await self.init_network_info()
+
+        self.transport, _ = await loop.create_datagram_endpoint(
+            lambda: ClientUDPProtocol(self),
+            local_addr=(self.client_ip, self.udp_port)
+        )
+
+        debug(f"[UDP] Listening on {self.client_ip}:{self.udp_port}")
+   
+    async def send_message(self, message: str):
+        if self.transport is None:
+            ui("ERROR|UDP listener not started")
+            return
+
+        try:
+            self.transport.sendto(message.encode(), (self.server_ip, self.server_port))
             debug(f"[UDP] Sent: {message.strip()}")
         except Exception as e:
             ui(f"ERROR|UDP send failed: {e}")
-        finally:
-            if transport:
-                transport.close()
 
     async def publish(self, subject, title, text):
         rq = await self.get_next_rq()
@@ -239,7 +252,7 @@ class UdpClient(BaseClient):
         msg = encode(C.PUBLISH_COMMENT, self.name, subject, title, text)
         await self.send_message(msg)
 
-    async def datagram_received(self, data, addr):
+    async def handle_datagram(self, data, addr):
         try:
             text = data.decode()
             debug(f"[UDP] RX from {addr}: {text.strip()}")
@@ -249,17 +262,21 @@ class UdpClient(BaseClient):
             if op == C.PUBLISH_DENIED:
                 await self.handle_publish_denied(fields, addr)
             elif op == C.MESSAGE:
-                await self.handle_message(fields, addr)
+             await self.handle_message(fields, addr)
             elif op == C.COMMENT:
-                await self.handle_comment(fields, addr)
+             await self.handle_comment(fields, addr)
             else:
-                debug(f"[UDP] Unknown op: {op}")
+             debug(f"[UDP] Unknown op: {op}")
 
         except ProtocolError as e:
             ui(f"ERROR|UDP protocol error: {e}")
         except Exception as e:
             ui(f"ERROR|UDP receive failed: {e}")
 
+    async def close_listener(self):
+        if self.transport:
+            self.transport.close()
+            self.transport = None
     async def handle_publish_denied(self, fields, addr):
         ui(f"PUBLISH-DENIED|{fields[1]}")
 

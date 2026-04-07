@@ -198,6 +198,37 @@ async def handle_list_users(ctx, writer, fields):
     _send(ctx, writer, encode(C.USERS_LIST, rq, *names))
     return False
 
+@register_handler(C.GET_USER_BY_IP)
+async def handle_get_user_by_ip(ctx, writer, fields):
+    if len(fields) != 2:
+        _send(ctx, writer, encode(C.USER_INFO, "0", "NOT-FOUND"))
+        return False
+
+    rq = fields[0]
+    ip = fields[1]
+
+    user = ctx.db.get_user_by_ip(ip)
+    if user is None:
+        _send(ctx, writer, encode(C.USER_INFO, rq, "NOT-FOUND"))
+        return False
+
+    subjects = ctx.db.get_subjects(user["name"])
+
+    _send(
+        ctx,
+        writer,
+        encode(
+            C.USER_INFO,
+            rq,
+            user["name"],
+            user["ip"],
+            str(user["tcp_port"]),
+            str(user["udp_port"]),
+            *subjects
+        )
+    )
+    return False
+
 async def handle_client(reader, writer, ctx):
     addr = writer.get_extra_info("peername")
     ctx.log.info(f"TCP connection from {addr}")
