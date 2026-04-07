@@ -10,7 +10,7 @@ namespace NSS
     public partial class Form1 : Form
     {
 
-        private bool isServerMode = false;   // true = server side active, false = client side active
+        private bool isServerMode = true;   // true = server side active, false = client side active
         private bool isServerA = true;      // true = Server A, false = Server B
 
 

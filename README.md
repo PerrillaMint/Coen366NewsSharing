@@ -1,38 +1,5 @@
 # Coen366NewsSharing
 
-
-## Run
-
-``` powershell
-cd Coen366NewsSharing
-python -m server.main
-```
-
-## Test (new terminal)
-
-``` powershell
-cd Coen366NewsSharing/ NSS_CSharp
-open NSS_CSharp.slnx
-go to Form1.cs
-change line 62 and set the path to pyhton.exe. You can find python.exe using "which python" command on terminal 
-example: string pythonExe = @"C:\Users\user1\AppData\Local\Microsoft\WindowsApps\python.exe";
-After starting the server using "python -m server.main" you can run the c sharp form.
-only use the top section of the form and register button (that's the only implemented function for now) which is "User Info / Connection"
-
----------------------------------------
-An example usage to test the connection:
-
-Name: Alice
-TCP Port: 5000
-Server IP: 127.0.0.1
-IP: 127.0.0.1
-UDP Port: 6000
-Server TCP: 10000
-
-----------------------------------------
-click Register
-```
-
 ## Start Servers
 
 ``` powershell
@@ -54,9 +21,16 @@ python -m server.main B
 ``` powershell
 ----------------------------------------
 # With server IP specified
-python -m create_client ClientName 192.168.1.100
+python -m create_client [ClientName] [Server IP] 
+```
+## Test (new terminal)
 
-# Without server IP (defaults to 127.0.0.1)
-python -m create_client ClientName
-----------------------------------------
+``` powershell
+cd Coen366NewsSharing/ NSS_CSharp
+Open NSS_CSharp.slnx
+Go to Form1.cs
+Change line 13  private bool isServerMode = true; if you are running server or private bool isServerMode = false; if it's a client. (We will bind this switch functionality to a radiobox later so we can change this variable on the UI)
+Change line 102 and set the path to pyhton.exe. You can find python.exe using "which python" command on terminal 
+Example: string pythonExe = @"C:\Users\user1\AppData\Local\Microsoft\WindowsApps\python.exe";
+After starting the server using "python -m server.main" and registering clients you can run the Csharp form.
 ```
