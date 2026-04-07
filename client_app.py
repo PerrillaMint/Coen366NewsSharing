@@ -33,6 +33,7 @@ async def handle_init_server(parts):
     try:
         server_cfg = await load_config(server_id)
         server_db = Database(server_cfg["db_path"])
+        out(f"DEBUG-DB-PATH|{server_cfg['db_path']}")
 
         server_name = server_cfg["server_name"]
         server_ip = server_cfg["host"]

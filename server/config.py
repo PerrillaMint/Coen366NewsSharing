@@ -4,6 +4,7 @@
 import sys
 import asyncio
 import os
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 def ui(msg: str):
     print(msg, flush=True)
@@ -78,7 +79,7 @@ async def load_config(server_id=None):
             "peer_ip": peer_ip,
             "peer_udp_port": 20000,
             "peer_ip_for_clients": peer_ip,
-            "db_path": "serverA.db",
+            "db_path": os.path.join(BASE_DIR, "serverA.db"),
         },
         "B": {
             "server_name": "B",
@@ -91,7 +92,7 @@ async def load_config(server_id=None):
             "peer_ip": peer_ip,
             "peer_udp_port": 20000,
             "peer_ip_for_clients": peer_ip,
-            "db_path": "serverB.db",
+            "db_path": os.path.join(BASE_DIR, "serverB.db"),
 
             #TODO : maybe add server C with localhost for testing
         },
