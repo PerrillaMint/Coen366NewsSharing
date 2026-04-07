@@ -57,7 +57,9 @@ namespace NSS
         private void InitializeClientSide()
         {
             string serverId = isServerA ? "A" : "B";
-            SendCommand($"INIT_SERVER {serverId}");
+            string serverIp = "192.168.0.58";   // your Linux server IP for now
+
+            SendCommand($"INIT_SERVER {serverId} {serverIp}");
         }
        
 

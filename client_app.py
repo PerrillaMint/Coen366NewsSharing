@@ -9,12 +9,12 @@ from server.persistence import Database
 
 server_cfg = None
 server_db = None
-
+remote_server_ip = None
 clients = {}
 active_client_key = None
 
-async def handle_init_client():
-    global server_cfg
+async def handle_init_client(parts):
+    global server_cfg, remote_server_ip
 
     try:
         if server_cfg is None:
@@ -25,10 +25,10 @@ async def handle_init_client():
         await temp_client.init_network_info()
         local_ip = temp_client.client_ip
 
-        reader, writer = await asyncio.open_connection(
-            server_cfg["host"],
-            server_cfg["tcp_port"]
-        )
+        server_ip = remote_server_ip if remote_server_ip else server_cfg["host"]
+        server_port = server_cfg["tcp_port"]
+
+        reader, writer = await asyncio.open_connection(server_ip, server_port)
 
         try:
             msg = encode(C.GET_USER_BY_IP, "1", local_ip)
@@ -54,8 +54,6 @@ async def handle_init_client():
                 out("ERROR|Bad USER-INFO response")
                 return
 
-            rq = fields[0]
-
             if fields[1] == "NOT-FOUND":
                 out(f"ERROR|No registered client found for IP {local_ip}")
                 return
@@ -67,7 +65,7 @@ async def handle_init_client():
 
             out(
                 f"CLIENT-INIT|{name}|{ip}|{tcp_port}|{udp_port}|"
-                f"{server_cfg['host']}|{server_cfg['tcp_port']}"
+                f"{server_ip}|{server_port}"
             )
 
         finally:
@@ -85,28 +83,27 @@ def make_key(name: str):
 
 
 async def handle_init_server(parts):
-    global server_cfg, server_db
+    global server_cfg, server_db, remote_server_ip
 
     if len(parts) < 2:
         out("ERROR|Invalid INIT_SERVER format")
         return
 
     server_id = parts[1].upper()
+    remote_server_ip = parts[2] if len(parts) > 2 else None
 
     try:
         server_cfg = await load_config(server_id)
         server_db = Database(server_cfg["db_path"])
-        out(f"DEBUG-DB-PATH|{server_cfg['db_path']}")
 
         server_name = server_cfg["server_name"]
-        server_ip = server_cfg["host"]
+        server_ip = remote_server_ip if remote_server_ip else server_cfg["host"]
         tcp_port = server_cfg["tcp_port"]
         udp_port = server_cfg["udp_port"]
 
         out(f"SERVER-INIT|{server_name}|{server_ip}|{tcp_port}|{server_ip}|{udp_port}|")
     except Exception as e:
         out(f"ERROR|INIT_SERVER failed: {e}")
-
 
 async def request_users_from_server(server_ip: str, server_port: int):
     global server_db
