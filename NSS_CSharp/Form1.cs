@@ -18,14 +18,24 @@ namespace NSS
         private void InitializeSubjects()
         {
             subjects_1_clb.Items.Clear();
+            subject_1_cb.Items.Clear();
 
-            subjects_1_clb.Items.Add("Sports");
-            subjects_1_clb.Items.Add("Entertainment");
-            subjects_1_clb.Items.Add("Health");
-            subjects_1_clb.Items.Add("Science");
-            subjects_1_clb.Items.Add("Technology");
-            subjects_1_clb.Items.Add("Politics");
-            subjects_1_clb.Items.Add("Business");
+            string[] subjects =
+            {
+                "Sports",
+                 "Entertainment",
+                 "Health",
+                 "Science",
+                 "Technology",
+                 "Politics",
+                 "Business"
+    };
+
+            foreach (string subject in subjects)
+            {
+                subjects_1_clb.Items.Add(subject);
+                subject_1_cb.Items.Add(subject);
+            }
         }
         private void LockClientConnectionFields()
         {
@@ -667,6 +677,29 @@ namespace NSS
             }
 
             string cmd = "SUBJECTS " + string.Join(" ", selectedSubjects);
+            SendCommand(cmd);
+        }
+
+        private void publish_1_bt_Click(object sender, EventArgs e)
+        {
+            if (subject_1_cb.SelectedItem == null)
+            {
+                MessageBox.Show("Select a subject.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(title_1_tb.Text) ||
+                string.IsNullOrWhiteSpace(text_1_tb.Text))
+            {
+                MessageBox.Show("Enter both title and text.");
+                return;
+            }
+
+            string subject = subject_1_cb.SelectedItem.ToString();
+            string title = title_1_tb.Text.Trim().Replace(" ", "_");
+            string text = text_1_tb.Text.Trim().Replace(" ", "_");
+
+            string cmd = $"PUBLISH {subject} {title} {text}";
             SendCommand(cmd);
         }
 

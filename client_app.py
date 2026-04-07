@@ -15,6 +15,29 @@ server_db = None
 remote_server_ip = None
 clients = {}
 active_client_key = None
+async def handle_publish(parts):
+    global udp_live_client, active_client_key
+
+    if udp_live_client is None:
+        out("ERROR|UDP client not initialized")
+        return
+
+    if active_client_key is None:
+        out("ERROR|No active client")
+        return
+
+    if len(parts) < 4:
+        out("ERROR|Invalid PUBLISH format")
+        return
+
+    subject = parts[1]
+    title = parts[2]
+    text = parts[3]
+
+    udp_live_client.name = active_client_key
+    await udp_live_client.publish(subject, title, text)
+
+    out("PUBLISH SENT")
 
 async def handle_init_client(parts):
     global server_cfg, remote_server_ip
@@ -365,6 +388,8 @@ async def main():
                 await handle_init_server(parts)
             elif cmd == "REGISTER":
                 await handle_register(parts)
+            elif cmd == "PUBLISH":
+                await handle_publish(parts)
             elif cmd == "SELECT":
                 await handle_select(parts)
             elif cmd == "UPDATE":

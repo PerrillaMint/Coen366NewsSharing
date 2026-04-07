@@ -373,6 +373,7 @@ namespace NSS
             this.publish_1_bt.TabIndex = 14;
             this.publish_1_bt.Text = "Publish";
             this.publish_1_bt.UseVisualStyleBackColor = true;
+            this.publish_1_bt.Click += new System.EventHandler(this.publish_1_bt_Click);
             // 
             // text_1_tb
             // 
