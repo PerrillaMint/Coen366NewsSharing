@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -27,8 +28,7 @@ namespace NSS
 
             if (isServerMode)
             {
-                if (!string.IsNullOrWhiteSpace(serverIp_2_tb.Text) &&
-                    !string.IsNullOrWhiteSpace(tcpPort_2_tb.Text))
+               
                 {
                     SendCommand($"LOADUSERS {serverIp_2_tb.Text} {tcpPort_2_tb.Text}");
 
@@ -47,11 +47,157 @@ namespace NSS
 
         private Process _pythonProcess;
         private bool _updatingCombo = false;
-       
+
+
+        private void StyleActionButton(Button btn, Color backColor)
+        {
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.FlatAppearance.MouseOverBackColor = ControlPaint.Light(backColor);
+            btn.FlatAppearance.MouseDownBackColor = ControlPaint.Dark(backColor);
+            btn.BackColor = backColor;
+            btn.ForeColor = Color.White;
+            btn.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btn.Cursor = Cursors.Hand;
+            btn.Height = 36;
+        }
+
+        private void StyleControls(Control parent)
+        {
+            Color formBg = Color.FromArgb(245, 247, 250);
+            Color cardBg = Color.White;
+            Color inputBg = Color.FromArgb(250, 250, 252);
+            Color textColor = Color.FromArgb(45, 45, 45);
+            Color logBg = Color.FromArgb(248, 249, 251);
+
+            foreach (Control ctrl in parent.Controls)
+            {
+                if (ctrl is GroupBox gb)
+                {
+                    gb.ForeColor = Color.FromArgb(55, 55, 55);
+                    gb.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+                    gb.BackColor = cardBg;
+                    gb.Padding = new Padding(10);
+                }
+                else if (ctrl is Button btn)
+                {
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatAppearance.BorderSize = 0;
+                    btn.BackColor = Color.FromArgb(52, 120, 246);
+                    btn.ForeColor = Color.White;
+                    btn.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+                    btn.Cursor = Cursors.Hand;
+                    btn.Height = 36;
+                }
+                else if (ctrl is TextBox tb)
+                {
+                    tb.BorderStyle = BorderStyle.FixedSingle;
+                    tb.BackColor = inputBg;
+                    tb.ForeColor = textColor;
+                    tb.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
+                }
+                else if (ctrl is ComboBox cb)
+                {
+                    cb.FlatStyle = FlatStyle.Flat;
+                    cb.BackColor = inputBg;
+                    cb.ForeColor = textColor;
+                    cb.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
+                }
+                else if (ctrl is Label lbl)
+                {
+                    lbl.ForeColor = Color.FromArgb(60, 60, 60);
+                    lbl.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
+                    lbl.BackColor = Color.Transparent;
+                }
+                else if (ctrl is RichTextBox rtb)
+                {
+                    rtb.BorderStyle = BorderStyle.FixedSingle;
+                    rtb.BackColor = logBg;
+                    rtb.ForeColor = Color.FromArgb(30, 30, 30);
+                    rtb.Font = new Font("Consolas", 10F, FontStyle.Regular);
+                }
+                else if (ctrl is TabPage tp)
+                {
+                    tp.BackColor = formBg;
+                }
+
+                if (ctrl.HasChildren)
+                    StyleControls(ctrl);
+            }
+        }
+
+        private void StyleTitleLabel(Label lbl)
+        {
+            if (lbl == null) return;
+
+            lbl.Font = new Font("Segoe UI", 22F, FontStyle.Bold);
+            lbl.ForeColor = Color.FromArgb(25, 25, 25);
+            lbl.BackColor = Color.Transparent;
+        }
+
+        private void ApplyModernTheme()
+        {
+            Color formBg = Color.FromArgb(245, 247, 250);
+            Color textColor = Color.FromArgb(40, 40, 40);
+            Color logBg = Color.FromArgb(248, 249, 251);
+
+            // Form
+            this.BackColor = formBg;
+            this.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
+            this.ForeColor = textColor;
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            // Tabs
+            tabPage1.Text = "Client";
+            tabPage2.Text = "Server";
+
+            tabPage1.BackColor = formBg;
+            tabPage2.BackColor = formBg;
+
+            main_tc.Appearance = TabAppearance.Normal;
+            main_tc.SizeMode = TabSizeMode.Fixed;
+            main_tc.ItemSize = new Size(120, 32);
+
+            // Apply general control styling
+            StyleControls(this);
+
+            // Titles
+            StyleTitleLabel(title_lb);
+            StyleTitleLabel(title2_lb);
+
+            // Buttons
+           
+            StyleActionButton(register_2_bt, Color.FromArgb(40, 167, 69));
+
+         
+            StyleActionButton(update_2_bt, Color.FromArgb(0, 123, 255));
+
+           
+            StyleActionButton(deRegister_2_bt, Color.FromArgb(220, 53, 69));
+
+            StyleActionButton(publish_1_bt, Color.FromArgb(111, 66, 193));
+
+            StyleActionButton(comment_1_bt, Color.FromArgb(245, 183, 0));
+            comment_1_bt.ForeColor = Color.Black;
+
+            // Feed boxes
+            feed_1_rtb.ReadOnly = true;
+            feed_1_rtb.BackColor = logBg;
+            feed_1_rtb.ForeColor = Color.FromArgb(30, 30, 30);
+            feed_1_rtb.Font = new Font("Consolas", 10F, FontStyle.Regular);
+            feed_1_rtb.BorderStyle = BorderStyle.FixedSingle;
+
+            feed_2_rtb.ReadOnly = true;
+            feed_2_rtb.BackColor = logBg;
+            feed_2_rtb.ForeColor = Color.FromArgb(30, 30, 30);
+            feed_2_rtb.Font = new Font("Consolas", 10F, FontStyle.Regular);
+            feed_2_rtb.BorderStyle = BorderStyle.FixedSingle;
+        }
 
         public Form1()
         {
             InitializeComponent();
+            ApplyModernTheme();
         }
 
         private void InitializeServerSide()
@@ -99,6 +245,9 @@ namespace NSS
                 InitializeServerSide();
             else
                 InitializeClientSide();
+
+            if (_refreshTimer != null && !_refreshTimer.Enabled)
+                _refreshTimer.Start();
         }
        
         private void Form1_Load(object sender, EventArgs e)
@@ -381,7 +530,29 @@ namespace NSS
                 MessageBox.Show("Failed to send command: " + ex.Message);
             }
         }
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            try
+            {
+                if (_refreshTimer != null)
+                    _refreshTimer.Stop();
 
- 
+                if (_pythonProcess != null && !_pythonProcess.HasExited)
+                {
+                    _pythonProcess.StandardInput.WriteLine("EXIT");
+                    _pythonProcess.StandardInput.Flush();
+
+                    if (!_pythonProcess.WaitForExit(1000))
+                        _pythonProcess.Kill();
+                }
+            }
+            catch
+            {
+            }
+
+            base.OnFormClosing(e);
+        }
+
+
     }
 }

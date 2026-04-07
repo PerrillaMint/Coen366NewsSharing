@@ -3,6 +3,7 @@
 ## Start Servers
 
 ``` powershell
+Delete existing databases
 ----------------------------------------
 ### If IPs are unknown, discover then configure
 

@@ -35,9 +35,6 @@ namespace NSS
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.title_lb = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.update_1_bt = new System.Windows.Forms.Button();
-            this.deRegister_1_bt = new System.Windows.Forms.Button();
-            this.register_1_bt = new System.Windows.Forms.Button();
             this.serverTcp_1_tb = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.serverIp_1_tb = new System.Windows.Forms.TextBox();
@@ -130,9 +127,6 @@ namespace NSS
             // 
             // groupBox7
             // 
-            this.groupBox7.Controls.Add(this.update_1_bt);
-            this.groupBox7.Controls.Add(this.deRegister_1_bt);
-            this.groupBox7.Controls.Add(this.register_1_bt);
             this.groupBox7.Controls.Add(this.serverTcp_1_tb);
             this.groupBox7.Controls.Add(this.label10);
             this.groupBox7.Controls.Add(this.serverIp_1_tb);
@@ -152,33 +146,6 @@ namespace NSS
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "User Info / Connection";
-            // 
-            // update_1_bt
-            // 
-            this.update_1_bt.Location = new System.Drawing.Point(516, 74);
-            this.update_1_bt.Name = "update_1_bt";
-            this.update_1_bt.Size = new System.Drawing.Size(86, 30);
-            this.update_1_bt.TabIndex = 14;
-            this.update_1_bt.Text = "Update";
-            this.update_1_bt.UseVisualStyleBackColor = true;
-            // 
-            // deRegister_1_bt
-            // 
-            this.deRegister_1_bt.Location = new System.Drawing.Point(395, 74);
-            this.deRegister_1_bt.Name = "deRegister_1_bt";
-            this.deRegister_1_bt.Size = new System.Drawing.Size(92, 30);
-            this.deRegister_1_bt.TabIndex = 13;
-            this.deRegister_1_bt.Text = "De-Register";
-            this.deRegister_1_bt.UseVisualStyleBackColor = true;
-            // 
-            // register_1_bt
-            // 
-            this.register_1_bt.Location = new System.Drawing.Point(452, 25);
-            this.register_1_bt.Name = "register_1_bt";
-            this.register_1_bt.Size = new System.Drawing.Size(86, 30);
-            this.register_1_bt.TabIndex = 12;
-            this.register_1_bt.Text = "Register";
-            this.register_1_bt.UseVisualStyleBackColor = true;
             // 
             // serverTcp_1_tb
             // 
@@ -367,7 +334,7 @@ namespace NSS
             this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox4.Location = new System.Drawing.Point(3, 384);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(625, 183);
+            this.groupBox4.Size = new System.Drawing.Size(625, 255);
             this.groupBox4.TabIndex = 2;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Incoming Feed / Messages";
@@ -376,13 +343,13 @@ namespace NSS
             // 
             this.feed_1_rtb.Location = new System.Drawing.Point(3, 18);
             this.feed_1_rtb.Name = "feed_1_rtb";
-            this.feed_1_rtb.Size = new System.Drawing.Size(616, 96);
+            this.feed_1_rtb.Size = new System.Drawing.Size(616, 162);
             this.feed_1_rtb.TabIndex = 16;
             this.feed_1_rtb.Text = "";
             // 
             // comment_1_bt
             // 
-            this.comment_1_bt.Location = new System.Drawing.Point(526, 126);
+            this.comment_1_bt.Location = new System.Drawing.Point(526, 186);
             this.comment_1_bt.Name = "comment_1_bt";
             this.comment_1_bt.Size = new System.Drawing.Size(93, 26);
             this.comment_1_bt.TabIndex = 15;
@@ -392,7 +359,7 @@ namespace NSS
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(10, 131);
+            this.label2.Location = new System.Drawing.Point(6, 191);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(67, 16);
             this.label2.TabIndex = 8;
@@ -400,7 +367,7 @@ namespace NSS
             // 
             // comment_1_tb
             // 
-            this.comment_1_tb.Location = new System.Drawing.Point(83, 128);
+            this.comment_1_tb.Location = new System.Drawing.Point(79, 188);
             this.comment_1_tb.Multiline = true;
             this.comment_1_tb.Name = "comment_1_tb";
             this.comment_1_tb.Size = new System.Drawing.Size(437, 24);
@@ -422,6 +389,7 @@ namespace NSS
             // 
             // clients_2_cb
             // 
+            this.clients_2_cb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.clients_2_cb.FormattingEnabled = true;
             this.clients_2_cb.Location = new System.Drawing.Point(131, 23);
             this.clients_2_cb.Name = "clients_2_cb";
@@ -444,7 +412,7 @@ namespace NSS
             // 
             this.feed_2_rtb.Location = new System.Drawing.Point(3, 18);
             this.feed_2_rtb.Name = "feed_2_rtb";
-            this.feed_2_rtb.Size = new System.Drawing.Size(616, 96);
+            this.feed_2_rtb.Size = new System.Drawing.Size(616, 159);
             this.feed_2_rtb.TabIndex = 16;
             this.feed_2_rtb.Text = "";
             // 
@@ -504,6 +472,7 @@ namespace NSS
             // 
             this.serverTcp_2_tb.Location = new System.Drawing.Point(265, 88);
             this.serverTcp_2_tb.Name = "serverTcp_2_tb";
+            this.serverTcp_2_tb.ReadOnly = true;
             this.serverTcp_2_tb.Size = new System.Drawing.Size(94, 22);
             this.serverTcp_2_tb.TabIndex = 11;
             // 
@@ -535,8 +504,9 @@ namespace NSS
             // 
             // udpPort_2_tb
             // 
-            this.udpPort_2_tb.Location = new System.Drawing.Point(265, 52);
+            this.udpPort_2_tb.Location = new System.Drawing.Point(265, 55);
             this.udpPort_2_tb.Name = "udpPort_2_tb";
+            this.udpPort_2_tb.ReadOnly = true;
             this.udpPort_2_tb.Size = new System.Drawing.Size(94, 22);
             this.udpPort_2_tb.TabIndex = 7;
             // 
@@ -568,8 +538,10 @@ namespace NSS
             // 
             // ip_2_tb
             // 
-            this.ip_2_tb.Location = new System.Drawing.Point(265, 24);
+            this.ip_2_tb.Enabled = false;
+            this.ip_2_tb.Location = new System.Drawing.Point(265, 25);
             this.ip_2_tb.Name = "ip_2_tb";
+            this.ip_2_tb.ReadOnly = true;
             this.ip_2_tb.Size = new System.Drawing.Size(94, 22);
             this.ip_2_tb.TabIndex = 3;
             // 
@@ -666,9 +638,6 @@ namespace NSS
         private System.Windows.Forms.TabControl main_tc;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.Button update_1_bt;
-        private System.Windows.Forms.Button deRegister_1_bt;
-        private System.Windows.Forms.Button register_1_bt;
         private System.Windows.Forms.TextBox serverTcp_1_tb;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox serverIp_1_tb;
