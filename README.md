@@ -3,7 +3,7 @@
 ## Start Servers
 
 ``` powershell
-Delete existing databases
+First, delete existing databases 
 ----------------------------------------
 ### If IPs are unknown, discover then configure
 
@@ -40,5 +40,10 @@ run the NSS.exe with the following arguments:
  "NSS.exe client" if this computer is a client
  "NSS.exe server A" if this computer is a the server A
  "NSS.exe server B" if this computer is a the server B
+```
 
+## Running the traffic_runner.py
+``` powershell
+Linux: python3 traffic_runner.py [server IP] [Server UDP Port]
+Windows: python.exe .\traffic_runner.py [server IP] [Server UDP Port]
 ```
