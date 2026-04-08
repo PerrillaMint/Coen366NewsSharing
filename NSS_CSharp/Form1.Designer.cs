@@ -316,10 +316,8 @@ namespace NSS
             // 
             // ip_1_tb
             // 
-            this.ip_1_tb.Enabled = false;
             this.ip_1_tb.Location = new System.Drawing.Point(265, 25);
             this.ip_1_tb.Name = "ip_1_tb";
-            this.ip_1_tb.ReadOnly = true;
             this.ip_1_tb.Size = new System.Drawing.Size(94, 22);
             this.ip_1_tb.TabIndex = 3;
             // 
@@ -455,6 +453,7 @@ namespace NSS
             this.comment_1_bt.TabIndex = 15;
             this.comment_1_bt.Text = "Comment";
             this.comment_1_bt.UseVisualStyleBackColor = true;
+            this.comment_1_bt.Click += new System.EventHandler(this.comment_1_bt_Click);
             // 
             // label2
             // 

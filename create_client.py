@@ -55,11 +55,16 @@ async def create_client(name=None, server_ip=None, udp_port=20001):
                 await udp_client.publish(subject, title, text)
 
             elif cmd == "comment":
-                subject = await asyncio.to_thread(input, "Subject: ")
-                title = await asyncio.to_thread(input, "Title: ")
-                text = await asyncio.to_thread(input, "Comment: ")
-                await udp_client.publish_comment(subject, title, text)
+                if udp_client.latest_message is None:
+                    print("No message available to comment on.")
+                    continue
 
+                text = await asyncio.to_thread(input, "Comment: ")
+                subject = udp_client.latest_message["subject"]
+                title = udp_client.latest_message["title"]
+
+                await udp_client.publish_comment(subject, title, text)
+                
     finally:
         await udp_client.close_listener()
         await tcp_client.close()

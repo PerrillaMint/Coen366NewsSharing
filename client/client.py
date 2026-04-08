@@ -176,6 +176,7 @@ class TcpClient(BaseClient):
             await self.handle_subjects_rejected(fields)
         elif op == C.USERS_LIST:
             await self.handle_users_list(fields)
+        
         else:
             debug(f"[TCP] Unknown op: {op}")
     async def handle_users_list(self, fields):
@@ -218,6 +219,7 @@ class UdpClient(BaseClient):
     def __init__(self, name, rq_counter=0, is_registered=False, subjects=None):
         super().__init__(name, rq_counter, is_registered, subjects)
         self.transport = None
+        self.latest_message = None
 
     async def start_listener(self):
         loop = asyncio.get_running_loop()
@@ -280,7 +282,14 @@ class UdpClient(BaseClient):
     async def handle_publish_denied(self, fields, addr):
         ui(f"PUBLISH-DENIED|{fields[1]}")
 
+   
     async def handle_message(self, fields, addr):
+        self.latest_message = {
+            "name": fields[0],
+            "subject": fields[1],
+            "title": fields[2],
+            "text": fields[3],
+        }
         ui(f"MESSAGE|{fields[0]}|{fields[1]}|{fields[2]}|{fields[3]}")
 
     async def handle_comment(self, fields, addr):

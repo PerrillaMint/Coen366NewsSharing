@@ -39,6 +39,36 @@ async def handle_publish(parts):
 
     out("PUBLISH SENT")
 
+async def handle_comment_latest(parts):
+
+    global udp_live_client, active_client_key
+
+    if udp_live_client is None:
+        out("ERROR|UDP client not initialized")
+        return
+
+    if active_client_key is None:
+        out("ERROR|No active client")
+        return
+
+    if len(parts) < 2:
+        out("ERROR|Invalid COMMENT_LATEST format")
+        return
+
+    if udp_live_client.latest_message is None:
+        out("ERROR|No message available to comment on")
+        return
+
+    text = parts[1]
+
+    subject = udp_live_client.latest_message["subject"]
+    title = udp_live_client.latest_message["title"]
+
+    udp_live_client.name = active_client_key
+    await udp_live_client.publish_comment(subject, title, text)
+
+    out("COMMENT SENT")
+        
 async def handle_init_client(parts):
     global server_cfg, remote_server_ip
 
@@ -402,6 +432,8 @@ async def main():
                 await handle_list()
             elif cmd == "GETSTATE":
                 await handle_getstate()
+            elif cmd == "COMMENT_LATEST":
+                await handle_comment_latest(parts)
             elif cmd == "EXIT":
                 for client in list(clients.values()):
                     try:
