@@ -701,6 +701,23 @@ namespace NSS
 
             string cmd = $"PUBLISH {subject} {title} {text}";
             SendCommand(cmd);
+            title_1_tb.Text = "";
+            text_1_tb.Text = "";
+
+        }
+
+        private void comment_1_bt_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(comment_1_tb.Text))
+            {
+                MessageBox.Show("Enter a comment first.");
+                return;
+            }
+
+            string text = comment_1_tb.Text.Trim().Replace(" ", "_");
+            string cmd = $"COMMENT_LATEST {text}";
+            SendCommand(cmd);
+            comment_1_tb.Text = "";
         }
 
     }
