@@ -37,6 +37,26 @@ namespace NSS
                 subject_1_cb.Items.Add(subject);
             }
         }
+
+        private bool ShouldShowClientLine(string line)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+                return false;
+
+            if (line == "PYTHON CLIENT READY")
+                return true;
+
+            if (line.StartsWith("MESSAGE|"))
+                return true;
+
+            if (line.StartsWith("COMMENT|"))
+                return true;
+
+            if (line.StartsWith("ERROR|"))
+                return false;
+
+            return false;
+        }
         private void LockClientConnectionFields()
         {
             name_1_tb.ReadOnly = true;
@@ -400,7 +420,8 @@ namespace NSS
             if (string.IsNullOrWhiteSpace(e.Data))
                 return;
 
-            AppendIncoming("[PY-ERR] " + e.Data);
+            if (isServerMode)
+                AppendIncoming("[PY-ERR] " + e.Data);
         }
         private void ApplyServerInit(string line)
         {
@@ -601,9 +622,14 @@ namespace NSS
             }
 
             if (isServerMode)
+            {
                 debug_2_rtb.AppendText(text + Environment.NewLine);
+            }
             else
-                feed_1_rtb.AppendText(text + Environment.NewLine);
+            {
+                if (ShouldShowClientLine(text))
+                    feed_1_rtb.AppendText(text + Environment.NewLine);
+            }
         }
         private void SendCommand(string cmd)
         {
@@ -719,6 +745,7 @@ namespace NSS
             SendCommand(cmd);
             comment_1_tb.Text = "";
         }
+
 
     }
 
