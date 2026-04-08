@@ -688,6 +688,8 @@ namespace NSS
             string cmd =
                 $"REGISTER {name_1_tb.Text} {ip_1_tb.Text} {tcpPort_1_tb.Text} {udpPort_1_tb.Text} {serverIp_1_tb.Text} {serverTcp_1_tb.Text}";
             SendCommand(cmd);
+            register_1_bt.Visible = false;
+            
         }
         private void updateSubjects_1_bt_Click(object sender, EventArgs e)
         {
