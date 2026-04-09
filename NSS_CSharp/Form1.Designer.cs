@@ -144,7 +144,7 @@ namespace NSS
             // 
             // updateSubjects_1_bt
             // 
-            this.updateSubjects_1_bt.Location = new System.Drawing.Point(416, 50);
+            this.updateSubjects_1_bt.Location = new System.Drawing.Point(445, 47);
             this.updateSubjects_1_bt.Name = "updateSubjects_1_bt";
             this.updateSubjects_1_bt.Size = new System.Drawing.Size(86, 30);
             this.updateSubjects_1_bt.TabIndex = 16;
@@ -230,6 +230,7 @@ namespace NSS
             this.update_1_bt.TabIndex = 15;
             this.update_1_bt.Text = "Update";
             this.update_1_bt.UseVisualStyleBackColor = true;
+            this.update_1_bt.Visible = false;
             // 
             // deRegister_1_bt
             // 
@@ -239,6 +240,7 @@ namespace NSS
             this.deRegister_1_bt.TabIndex = 14;
             this.deRegister_1_bt.Text = "De-Register";
             this.deRegister_1_bt.UseVisualStyleBackColor = true;
+            this.deRegister_1_bt.Visible = false;
             // 
             // register_1_bt
             // 
@@ -365,7 +367,7 @@ namespace NSS
             // 
             // publish_1_bt
             // 
-            this.publish_1_bt.Location = new System.Drawing.Point(395, 26);
+            this.publish_1_bt.Location = new System.Drawing.Point(445, 26);
             this.publish_1_bt.Name = "publish_1_bt";
             this.publish_1_bt.Size = new System.Drawing.Size(92, 30);
             this.publish_1_bt.TabIndex = 14;
@@ -559,6 +561,7 @@ namespace NSS
             this.update_2_bt.TabIndex = 14;
             this.update_2_bt.Text = "Update";
             this.update_2_bt.UseVisualStyleBackColor = true;
+            this.update_2_bt.Visible = false;
             // 
             // deRegister_2_bt
             // 
@@ -568,6 +571,7 @@ namespace NSS
             this.deRegister_2_bt.TabIndex = 13;
             this.deRegister_2_bt.Text = "De-Register";
             this.deRegister_2_bt.UseVisualStyleBackColor = true;
+            this.deRegister_2_bt.Visible = false;
             // 
             // register_2_bt
             // 
@@ -577,6 +581,7 @@ namespace NSS
             this.register_2_bt.TabIndex = 12;
             this.register_2_bt.Text = "Register";
             this.register_2_bt.UseVisualStyleBackColor = true;
+            this.register_2_bt.Visible = false;
             // 
             // serverTcp_2_tb
             // 

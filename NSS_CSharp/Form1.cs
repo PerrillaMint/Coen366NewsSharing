@@ -623,7 +623,12 @@ namespace NSS
 
             if (isServerMode)
             {
-                debug_2_rtb.AppendText(text + Environment.NewLine);
+                    if (text.StartsWith ("Server A Peer")) {  }
+
+                    else { debug_2_rtb.AppendText(text + Environment.NewLine); }
+                  
+                    
+                
             }
             else
             {
